@@ -1,6 +1,7 @@
 const express = require('express');
 
 function RoomRouter() {
+
     let router = express();
 
     router.use(express.json({ limit: '100mb' }));
@@ -8,7 +9,7 @@ function RoomRouter() {
 
 
     //criar get e post para o path /rooms
-    router.route('./rooms')
+    router.route('/rooms')
         //get
         .get(function (req, res) {
             console.log('get');
