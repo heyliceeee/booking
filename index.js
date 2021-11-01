@@ -14,6 +14,11 @@ app.use(express.json())
 const server = http.Server(app);
 
 
+//config.js e mongoose
+let config = require('./config');
+var mongoose = require('mongoose');
+mongoose.connect(config.db);
+
 
 server.listen(port, hostname, () => {
     console.log(`Server running at https://${hostname}:${port}/`);
