@@ -14,7 +14,7 @@ let RoomSchema = new Schema({
 });
 
 //criar um modelo para usar o schema
-let Room = mongoose.model('Room', RoomSchema);
+let Room = mongoose.model('User', RoomSchema);
 
 //tornar isto disponível para os nossos users nas nossas node apps
 module.exports = Room;

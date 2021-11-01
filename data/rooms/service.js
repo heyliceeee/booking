@@ -2,7 +2,8 @@
 
 function RoomService(RoomModel){
     let service = {
-        create
+        create,
+        findAll
     };
 
     //criar room
@@ -20,6 +21,18 @@ function RoomService(RoomModel){
                 if(err) reject(err);
 
                 resolve('Room created!');
+            });
+        });
+    }
+
+    //procurar
+    function findAll(){
+        return new Promise(function (resolve, reject){
+            RoomModel.find({}, function (err, users) {
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
             });
         });
     }
