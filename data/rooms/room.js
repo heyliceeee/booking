@@ -2,15 +2,21 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
+let Tags = new Schema({
+    typeRoom: { type: String, required: true },
+    nPool: { type: Number, required: false, default: 0},
+    carPark: { type: Boolean, required: false, default: false},
+    breakfast: { type: Boolean, required: false, default: false},
+    lunck: { type: Boolean, required: false, default: false}
+});
+
 //criar uma schema
 let RoomSchema = new Schema({
-    id: { type: Number,  required: true, unique: true },
-    descricao: { type: String, required: true},
-    dataCheckIn: { type: Date, required: false, default: 0000-00-00},
-    dataCheckOut: { type: Date, required: false, default: 0000-00-00},
-    capacidadeAdulto: { type: Number, required: false, default: 0},
-    capacidadeCrianca: { type: Number, required: false, default: 0},
-    preco: { type: Number, required: true },
+    description: { type: String, required: true},
+    nAdult: { type: Number, required: true },
+    nChild: { type: Number, required: true },
+    price: { type: Number, required: true, currency: "EUR" },
+    tags: [{ type: Tags }]
 });
 
 //criar um modelo para usar o schema
