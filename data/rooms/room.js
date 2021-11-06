@@ -7,7 +7,7 @@ let Tags = new Schema({
     nPool: { type: Number, required: false, default: 0},
     carPark: { type: Boolean, required: false, default: false},
     breakfast: { type: Boolean, required: false, default: false},
-    lunck: { type: Boolean, required: false, default: false}
+    lunch: { type: Boolean, required: false, default: false}
 });
 
 //criar uma schema
