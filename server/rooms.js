@@ -28,7 +28,6 @@ function RoomRouter() {
     router.route('/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
-            
             Rooms.findAll()
                 .then((rooms) => {
                     console.log('---|all rooms|---'); //retorna todos os rooms
