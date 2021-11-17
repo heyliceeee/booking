@@ -1,37 +1,48 @@
-const express = require ('express');
-const Users = require ('../data/users')
+const express = require('express');
+const Users = require('../data/users');
 
-function AuthRouter() {
-     let router = express();
-     
-     router.use(express.json({limit : '100mb'}));
-     router.use(express.urlencoded({ limit : '100mb', extended: true}));
+function AuthRouter(){
+    let router = express();
 
-     //auth/register        
+    //camadas
+    router.use(express.json( {
+        limit: '100mb' }
+    ));
+
+    router.use(express.urlencoded( 
+       { limit: '100mb', extended: true }
+    ));
+    //fim camadas
+
+
+
+    //auth/register        
     router.route('/register')
-    //POST - create user
-    .post(function (req, res, next) {
-        console.log('---|create user|---');
-        const body = req.body;
+        //POST - create user
+        .post(function (req, res, next) {
+            console.log('---|create user|---');
+            const body = req.body;
 
-        //console.log(body);
+            //console.log(body);
 
-        Users.create(body)
-            .then((user) => Users.createToken(user))
+            Users.create(body)
+                .then((user) => Users.createToken(user))
 
-            .then((response) => {
-                console.log('save');
-                res.status(200);
-                res.send(response);
-            })
+                .then((response) => {
+                    console.log('save');
+                    res.status(200);
+                    res.send(response);
+                })
 
-            .catch((err) => {
-                console.log("error");
-                res.status(500);
-                res.send(err);
-                next();
-            });
-    });
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    res.send(err);
+                    next();
+                });
+        });
+
+
 
     //auth/me
     router.route('/me')
@@ -49,39 +60,6 @@ function AuthRouter() {
                 .then((decoded) => {
 
                     res.status(202).send({ auth: true, decoded });
-
-const express = require('express');
-const Users = require('../data/users')
-
-function AuthRouter() {
-    let router = express();
-
-    router.use(express.json({ limit: '100mb' }));
-    router.use(express.urlencoded({ limit: '100mb', extended: true }));
-
-    router.route('/register')
-        .get(function (req, res, next) {
-            Users.findAll()
-                .then((users) => {
-                    console.log('---|all rooms|---'); //retorna todos os rooms
-                    res.send(users);
-                    next();
-                })
-
-                .catch((err) => {
-                    console.log('"---|error|---"');
-                    next();
-                });
-        })
-
-        .post(function (req, res, next) {
-            const body = req.body;
-            
-            Users.create(body)
-                .then((user) => Users.createToken(user))
-                .then((response) => {
-                    res.status(200);
-                    res.send(response);
                 })
 
                 .catch((err) => {
@@ -92,36 +70,41 @@ function AuthRouter() {
                 });
         });
 
-        //auth/login
+
+
+    //auth/login
     router.route('/login')
-    //POST - validar se o user existe na BD
-    .post(function (req, res, next) {
-        console.log('---|verifiy user if exists|---');
-        let name = req.body.name;
-        let password = req.body.password;
+        //POST - validar se o user existe na BD
+        .post(function (req, res, next) {
+            console.log('---|verifiy user if exists|---');
+            let name = req.body.name;
+            let password = req.body.password;
 
-        //console.log(name);
-        //console.log(password);
+            //console.log(name);
+            //console.log(password);
 
-        Users.findUser({ name, password })
-            .then((user) => Users.createToken(user))
+            Users.findUser({ name, password })
+                .then((user) => Users.createToken(user))
 
-            .then((response) => {
-                console.log('save');
-                res.status(200);
-                res.send(response);
-            })
-        
-            .catch((err) => {
-                console.log("error");
-                res.status(500);
-                res.send(err);
-                next();
-            });
-    });
+                .then((response) => {
+                    console.log('save');
+                    res.status(200);
+                    res.send(response);
+                })
+            
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    res.send(err);
+                    next();
+                });
+        });
 
 
-    return router;
+
+
+
+        return router;
 }
 
-module.exports = AuthRouter
+module.exports = AuthRouter;
