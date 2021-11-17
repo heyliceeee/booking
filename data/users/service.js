@@ -37,6 +37,24 @@ function UserService(UserModel) {
 
             //guardar
             newUser.save(function (err) {
+        createToken,
+        findAll
+    };
+
+    
+
+    function create(values) {
+        let newUser = UserModel(values);
+        return save(newUser);
+    }
+
+    function save(newUser) {
+        return new Promise(function (resolve, reject) {
+            //do a thing, possibly async, then...
+            newUser.save(function (err) {
+                console.log(err);
+                if (err) reject("There's a problema with register");
+
 
                 if (err) reject("There is a problem with register");
                 resolve("user created");
@@ -107,6 +125,23 @@ function UserService(UserModel) {
         return bcrypt.compare(password, hash);
     }
 
+
+
+    
+        return {auth: true, token}
+    }
+
+    function findAll(){
+        return new Promise(function (resolve, reject){
+
+            UserModel.find({}, function (err, users) {
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
+            });
+        });
+    }
 
     return service;
 }

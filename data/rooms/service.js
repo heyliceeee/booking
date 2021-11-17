@@ -12,7 +12,7 @@ function RoomService(RoomModel){
 
     //criar room
     function create(values){
-
+        console.log("teste")
         let newRoom = RoomModel(values);
         return save(newRoom); //guarda novo room
     }
