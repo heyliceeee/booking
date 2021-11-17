@@ -2,7 +2,7 @@ const config = require("../../config");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-function UserService(UserModel) {
+function UserService(UserModel){
     let service = {
         create,
         save,
@@ -12,6 +12,7 @@ function UserService(UserModel) {
         createPassword,
         comparePassword,
     };
+
 
     //criar user
     function create(user){
@@ -31,36 +32,20 @@ function UserService(UserModel) {
             });
     }
 
+
     //guardar user
     function save(newUser){
         return new Promise(function (resolve, reject){
 
             //guardar
             newUser.save(function (err) {
-        createToken,
-        findAll
-    };
-
-    
-
-    function create(values) {
-        let newUser = UserModel(values);
-        return save(newUser);
-    }
-
-    function save(newUser) {
-        return new Promise(function (resolve, reject) {
-            //do a thing, possibly async, then...
-            newUser.save(function (err) {
-                console.log(err);
-                if (err) reject("There's a problema with register");
-
 
                 if (err) reject("There is a problem with register");
                 resolve("user created");
             });
         });
     }
+
 
     //criar token
     function createToken(user){
@@ -71,6 +56,7 @@ function UserService(UserModel) {
 
         return { auth: true, token }
     }
+
 
     //verificar token
     function verifyToken(token){
@@ -87,6 +73,7 @@ function UserService(UserModel) {
             })
         })
     }
+
 
     //procurar user pelo nome
     function findUser({ name, password }) {
@@ -114,6 +101,7 @@ function UserService(UserModel) {
         })
     }
 
+
     //criar password encriptada
     function createPassword(user){
         return bcrypt.hash(user.password, config.saltRounds);
@@ -126,22 +114,6 @@ function UserService(UserModel) {
     }
 
 
-
-    
-        return {auth: true, token}
-    }
-
-    function findAll(){
-        return new Promise(function (resolve, reject){
-
-            UserModel.find({}, function (err, users) {
-                if (err) reject(err);
-
-                //objecto de todos os users
-                resolve(users);
-            });
-        });
-    }
 
     return service;
 }
