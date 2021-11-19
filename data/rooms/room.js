@@ -10,6 +10,16 @@ let Tags = new Schema({
     lunch: { type: Boolean, required: false, default: false}
 });
 
+/*
+    Coisas que se poderiam adicionar:
+
+    - Número de Estrelas
+    - Classificiação
+    - c/s sauna 
+    - c/s spa
+
+*/
+
 //criar uma schema
 let RoomSchema = new Schema({
     description: { type: String, required: true},
