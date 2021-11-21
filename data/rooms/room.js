@@ -4,6 +4,7 @@ let Schema = mongoose.Schema;
 
 let Tags = new Schema({
     typeRoom: { type: String, required: true },
+    vip: { type: Boolean, required: false, default: false},
     nPool: { type: Number, required: false, default: 0},
     carPark: { type: Boolean, required: false, default: false},
     breakfast: { type: Boolean, required: false, default: false},
