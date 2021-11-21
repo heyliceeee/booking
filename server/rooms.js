@@ -322,7 +322,68 @@ router.route('/user/rooms')
                 })
 
 
+//-------------------------------------------------------------------------------------//
+//------------------------------------ALL ROUTES--------------------------------------//
+//-----------------------------------------------------------------------------------//
 
+router.route('/rooms')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+            Rooms.findAll()
+                .then((rooms) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+                    res.send(rooms);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('"---|error|---"');
+                    next();
+                });
+        })
+
+
+        router.route('/rooms/:roomId')
+            //GET - findById room
+            .get(function (req, res, next) {
+                let roomId = req.params['roomId'];
+
+                Rooms.findById(roomId)
+                    .then((room) => {
+                        console.log('---| find one room by ID|---'); //retorna o room pelo Id
+                        res.status(200);
+                        res.send(room);
+                        next();
+                    })
+
+                    .catch((err) => {
+                        console.log('"---| error|---"');
+                        res.status(404);
+                        next();
+                    });
+            })
+
+
+            router.route('/rooms/:roomId/tags')
+                 //GET - findById room return tags
+                 .get(function (req, res, next) {
+                    let roomId = req.params['roomId'];
+                    let tags = req.body.tags;
+    
+                    Rooms.findById(roomId)
+                        .then((room) => {
+                            console.log('---| find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                            res.status(200);
+                            res.send(tags);
+                            next();
+                        })
+    
+                        .catch((err) => {
+                            console.log('"---| error|---"');
+                            res.status(404);
+                            next();
+                        });
+                })
 
 
 
