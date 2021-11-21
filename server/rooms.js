@@ -25,7 +25,8 @@ function RoomRouter() {
 
 
 
-    router.route('/rooms')
+
+    router.route('/admin/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
             Rooms.findAll()
@@ -40,6 +41,7 @@ function RoomRouter() {
                     next();
                 });
         })
+        
 
         //POST - create rooms
         .post(function (req, res, next) {

@@ -100,10 +100,6 @@ function AuthRouter(){
                 });
         });
 
-
-
-
-
         return router;
 }
 
