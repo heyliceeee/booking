@@ -1,5 +1,6 @@
 const express = require('express');
 const Rooms = require('../data/rooms');
+const Users = require('../data/users');
 
 function RoomRouter() {
 
@@ -33,17 +34,21 @@ function RoomRouter() {
     router.route('/admin/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
-            Rooms.findAll()
-                .then((rooms) => {
-                    console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
-                    res.send(rooms);
-                    next();
-                })
 
-                .catch((err) => {
-                    console.log('"---|ADMIN error|---"');
-                    next();
-                });
+            role = "admin";
+           
+            Users.checkRole(role)
+                .then(() => Rooms.findAll())
+                    .then((rooms) => {
+                        console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
+                        res.send(rooms);
+                        next();
+                    })
+
+                    .catch((err) => {
+                        console.log('"---|ADMIN error|---"');
+                        next();
+                    });
         })
         
         //POST - create rooms

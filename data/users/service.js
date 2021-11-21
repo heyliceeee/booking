@@ -11,6 +11,7 @@ function UserService(UserModel){
         findUser,
         createPassword,
         comparePassword,
+        checkRole,
     };
 
 
@@ -114,6 +115,16 @@ function UserService(UserModel){
         return bcrypt.compare(password, hash);
     }
 
+
+    //verificar role
+    function checkRole(role, req, res, next) {
+
+        if(role.includes(req.user.role)){
+            next();
+        }
+
+        return res.status(401);
+    }
 
 
     return service;
