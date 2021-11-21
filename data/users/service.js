@@ -15,8 +15,8 @@ function UserService(UserModel){
 
 
     //criar user
-    function create(user){
-        return createPassword(user)
+    function create(user, role){
+        return createPassword(user, role)
             .then((hashPassword, err) => {
                 if(err){
                     return Promise.reject("Not saved");
@@ -25,6 +25,7 @@ function UserService(UserModel){
                 let newUserWithPassword = {
                     ...user,
                     password: hashPassword,
+                    role
                 }
 
                 let newUser = UserModel(newUserWithPassword);
@@ -76,10 +77,10 @@ function UserService(UserModel){
 
 
     //procurar user pelo nome
-    function findUser({ name, password }) {
+    function findUser({ name, password, role }) {
         return new Promise(function (resolve, reject) {
 
-            UserModel.findOne({ name }, function (err, user) {
+            UserModel.findOne({ name, role }, function (err, user) {
                 if(err) reject(err);
                 //objeto de todos os users
 
