@@ -24,9 +24,12 @@ function RoomRouter() {
     //fim camadas    
 
 
+
+
 //-------------------------------------------------------------------------------------//
 //------------------------------------ADMIN ROUTES------------------------------------//
 //-----------------------------------------------------------------------------------//
+
     router.route('/admin/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
@@ -125,6 +128,179 @@ function RoomRouter() {
 
 
             router.route('/admin/rooms/:roomId/tags')
+                //GET - findById room return tags
+                .get(function (req, res, next) {
+                    let roomId = req.params['roomId'];
+                    let tags = req.body.tags;
+    
+                    Rooms.findById(roomId)
+                        .then((room) => {
+                            console.log('---|find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                            res.status(200);
+                            res.send(tags);
+                            next();
+                        })
+    
+                        .catch((err) => {
+                            console.log('"---|error|---"');
+                            res.status(404);
+                            next();
+                        });
+                })
+
+
+
+
+//-------------------------------------------------------------------------------------//
+//------------------------------------EDITOR ROUTES-----------------------------------//
+//-----------------------------------------------------------------------------------//
+
+router.route('/editor/rooms')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+            Rooms.findAll()
+                .then((rooms) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+                    res.send(rooms);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('"---|error|---"');
+                    next();
+                });
+        })
+        
+        //POST - create rooms
+        .post(function (req, res, next) {
+            console.log('---|create room|---');
+            let body = req.body;
+
+            Rooms.create(body)
+                .then(() => {
+                    console.log('save');
+                    res.status(200);
+                    res.send(body);
+                    next();
+                })
+                .catch((err) => {
+                    console.log('"---|error|---"');
+                    console.log('room already exists');
+                    err.status = err.status || 500;
+                    res.status(401);
+                    next();
+                });
+        });
+
+
+        router.route('/editor/rooms/:roomId')
+            //GET - findById room
+            .get(function (req, res, next) {
+                let roomId = req.params['roomId'];
+
+                Rooms.findById(roomId)
+                    .then((room) => {
+                        console.log('---|find one room by ID|---'); //retorna o room pelo Id
+                        res.status(200);
+                        res.send(room);
+                        next();
+                    })
+
+                    .catch((err) => {
+                        console.log('"---|error|---"');
+                        res.status(404);
+                        next();
+                    });
+            })
+
+            //PUT - update room by ID
+            .put(function (req, res, next) {
+                let roomId = req.params['roomId'];
+                let body = req.body;
+
+                Rooms.update(roomId, body)
+                    .then((room) => {
+                        console.log('---|update one room by ID|---'); //altera dados do room
+                        res.status(200);
+                        res.send(room);
+                        next();
+                    })
+
+                    .catch((err) => {
+                        console.log('"---|error|---"');
+                        res.status(404);
+                        next();
+                    });
+            })
+
+
+            router.route('/editor/rooms/:roomId/tags')
+                //GET - findById room return tags
+                .get(function (req, res, next) {
+                    let roomId = req.params['roomId'];
+                    let tags = req.body.tags;
+    
+                    Rooms.findById(roomId)
+                        .then((room) => {
+                            console.log('---|find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                            res.status(200);
+                            res.send(tags);
+                            next();
+                        })
+    
+                        .catch((err) => {
+                            console.log('"---|error|---"');
+                            res.status(404);
+                            next();
+                        });
+                })
+
+
+
+
+//-------------------------------------------------------------------------------------//
+//------------------------------------USER ROUTES------------------------------------ //
+//-----------------------------------------------------------------------------------//
+
+router.route('/user/rooms')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+            Rooms.findAll()
+                .then((rooms) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+                    res.send(rooms);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('"---|error|---"');
+                    next();
+                });
+        })
+
+
+        router.route('/user/rooms/:roomId')
+            //GET - findById room
+            .get(function (req, res, next) {
+                let roomId = req.params['roomId'];
+
+                Rooms.findById(roomId)
+                    .then((room) => {
+                        console.log('---|find one room by ID|---'); //retorna o room pelo Id
+                        res.status(200);
+                        res.send(room);
+                        next();
+                    })
+
+                    .catch((err) => {
+                        console.log('"---|error|---"');
+                        res.status(404);
+                        next();
+                    });
+            })
+
+
+            router.route('/user/rooms/:roomId/tags')
                  //GET - findById room return tags
                  .get(function (req, res, next) {
                     let roomId = req.params['roomId'];
@@ -144,6 +320,10 @@ function RoomRouter() {
                             next();
                         });
                 })
+
+
+
+
 
 
     router.route('/hotel')
