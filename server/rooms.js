@@ -24,8 +24,9 @@ function RoomRouter() {
     //fim camadas    
 
 
-
-
+//-------------------------------------------------------------------------------------//
+//------------------------------------ADMIN ROUTES------------------------------------//
+//-----------------------------------------------------------------------------------//
     router.route('/admin/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
@@ -64,7 +65,7 @@ function RoomRouter() {
         });
 
 
-        router.route('/rooms/:roomId')
+        router.route('/admin/rooms/:roomId')
             //GET - findById room
             .get(function (req, res, next) {
                 let roomId = req.params['roomId'];
@@ -123,7 +124,7 @@ function RoomRouter() {
             });
 
 
-            router.route('/rooms/:roomId/tags')
+            router.route('/admin/rooms/:roomId/tags')
                  //GET - findById room return tags
                  .get(function (req, res, next) {
                     let roomId = req.params['roomId'];
