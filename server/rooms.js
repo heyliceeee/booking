@@ -42,7 +42,6 @@ function RoomRouter() {
                 });
         })
         
-
         //POST - create rooms
         .post(function (req, res, next) {
             console.log('---|create room|---');
