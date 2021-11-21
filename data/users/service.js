@@ -30,6 +30,9 @@ function UserService(UserModel){
                 }
 
                 let newUser = UserModel(newUserWithPassword);
+
+                //console.log(newUser);
+
                 return save(newUser); //guarda novo user
             });
     }
@@ -52,7 +55,7 @@ function UserService(UserModel){
     //criar token
     function createToken(user){
         
-        let token = jwt.sign({ id: user._id }, config.secret, {
+        let token = jwt.sign({ id: user._id, }, config.secret, {
             expiresIn: config.expiresPassword 
         });
 
@@ -119,7 +122,7 @@ function UserService(UserModel){
     //verificar role
     function checkRole(role, req, res, next) {
 
-        if(role.includes(req.user.role)){
+        if(role.includes(user.role)){
             next();
         }
 

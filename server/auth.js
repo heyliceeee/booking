@@ -156,6 +156,7 @@ function AuthRouter(){
         .get(function(req, res, next) {
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
+            let role = user.role;
 
             if(!token) {
 
@@ -165,7 +166,7 @@ function AuthRouter(){
             return Users.verifyToken(token)
                 .then((decoded) => {
 
-                    res.status(202).send({ auth: true, decoded });
+                    res.status(202).send( {role, auth: true, decoded });
                 })
 
                 .catch((err) => {

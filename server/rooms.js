@@ -37,18 +37,42 @@ function RoomRouter() {
 
             role = "admin";
            
-            Users.checkRole(role)
-                .then(() => Rooms.findAll())
-                    .then((rooms) => {
-                        console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
-                        res.send(rooms);
-                        next();
-                    })
+            console.log('---|verify token|---');
+            let token = req.headers['x-access-token'];
 
-                    .catch((err) => {
-                        console.log('"---|ADMIN error|---"');
-                        next();
-                    });
+            if(!token) {
+
+                return res.status(401).send({ auth: false, message: 'No token provided.' })
+            }
+
+            return Users.verifyToken(token)
+                .then((decoded) => {
+
+                    //res.status(202).send({ auth: true, decoded });
+
+                    Rooms.findAll()
+                        .then((rooms) => {
+                            console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
+                            res.send(rooms);
+                            next();
+                })
+
+                        .catch((err) => {
+                            console.log('"---|ADMIN error|---"');
+                            console.log(err);
+                            next();
+                        });
+                })
+
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    res.send(err);
+                    next();
+                });
+            
+
+            
         })
         
         //POST - create rooms
