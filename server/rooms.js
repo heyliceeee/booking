@@ -35,20 +35,20 @@ function RoomRouter() {
         .get(function (req, res, next) {
             Rooms.findAll()
                 .then((rooms) => {
-                    console.log('---|all rooms|---'); //retorna todos os rooms
+                    console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
                     res.send(rooms);
                     next();
                 })
 
                 .catch((err) => {
-                    console.log('"---|error|---"');
+                    console.log('"---|ADMIN error|---"');
                     next();
                 });
         })
         
         //POST - create rooms
         .post(function (req, res, next) {
-            console.log('---|create room|---');
+            console.log('---|ADMIN create room|---');
             let body = req.body;
 
             Rooms.create(body)
@@ -59,7 +59,7 @@ function RoomRouter() {
                     next();
                 })
                 .catch((err) => {
-                    console.log('"---|error|---"');
+                    console.log('"---|ADMIN error|---"');
                     console.log('room already exists');
                     err.status = err.status || 500;
                     res.status(401);
@@ -75,14 +75,14 @@ function RoomRouter() {
 
                 Rooms.findById(roomId)
                     .then((room) => {
-                        console.log('---|find one room by ID|---'); //retorna o room pelo Id
+                        console.log('---|ADMIN find one room by ID|---'); //retorna o room pelo Id
                         res.status(200);
                         res.send(room);
                         next();
                     })
 
                     .catch((err) => {
-                        console.log('"---|error|---"');
+                        console.log('"---|ADMIN error|---"');
                         res.status(404);
                         next();
                     });
@@ -95,14 +95,14 @@ function RoomRouter() {
 
                 Rooms.update(roomId, body)
                     .then((room) => {
-                        console.log('---|update one room by ID|---'); //altera dados do room
+                        console.log('---|ADMIN update one room by ID|---'); //altera dados do room
                         res.status(200);
                         res.send(room);
                         next();
                     })
 
                     .catch((err) => {
-                        console.log('"---|error|---"');
+                        console.log('"---|ADMIN error|---"');
                         res.status(404);
                         next();
                     });
@@ -114,13 +114,13 @@ function RoomRouter() {
 
                 Rooms.removeById(roomId)
                     .then(() => {
-                        console.log("---|delete one room by ID|---")
+                        console.log("---|ADMIN delete one room by ID|---")
                         res.status(200);
                         next();
                     })
 
                     .catch((err) => {
-                        console.log('"---|error|---"');
+                        console.log('"---|ADMIN error|---"');
                         res.status(404);
                         next();
                     });
@@ -135,14 +135,14 @@ function RoomRouter() {
     
                     Rooms.findById(roomId)
                         .then((room) => {
-                            console.log('---|find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                            console.log('---|ADMIN find one room by ID return tags|---'); //retorna as tags do room pelo Id
                             res.status(200);
                             res.send(tags);
                             next();
                         })
     
                         .catch((err) => {
-                            console.log('"---|error|---"');
+                            console.log('"---|ADMIN error|---"');
                             res.status(404);
                             next();
                         });
@@ -160,20 +160,20 @@ router.route('/editor/rooms')
         .get(function (req, res, next) {
             Rooms.findAll()
                 .then((rooms) => {
-                    console.log('---|all rooms|---'); //retorna todos os rooms
+                    console.log('---|EDITOR all rooms|---'); //retorna todos os rooms
                     res.send(rooms);
                     next();
                 })
 
                 .catch((err) => {
-                    console.log('"---|error|---"');
+                    console.log('"---|EDITOR error|---"');
                     next();
                 });
         })
         
         //POST - create rooms
         .post(function (req, res, next) {
-            console.log('---|create room|---');
+            console.log('---|EDITOR create room|---');
             let body = req.body;
 
             Rooms.create(body)
@@ -184,7 +184,7 @@ router.route('/editor/rooms')
                     next();
                 })
                 .catch((err) => {
-                    console.log('"---|error|---"');
+                    console.log('"---|EDITOR error|---"');
                     console.log('room already exists');
                     err.status = err.status || 500;
                     res.status(401);
@@ -200,14 +200,14 @@ router.route('/editor/rooms')
 
                 Rooms.findById(roomId)
                     .then((room) => {
-                        console.log('---|find one room by ID|---'); //retorna o room pelo Id
+                        console.log('---|EDITOR find one room by ID|---'); //retorna o room pelo Id
                         res.status(200);
                         res.send(room);
                         next();
                     })
 
                     .catch((err) => {
-                        console.log('"---|error|---"');
+                        console.log('"---EDITOR |error|---"');
                         res.status(404);
                         next();
                     });
@@ -220,14 +220,14 @@ router.route('/editor/rooms')
 
                 Rooms.update(roomId, body)
                     .then((room) => {
-                        console.log('---|update one room by ID|---'); //altera dados do room
+                        console.log('---|EDITOR update one room by ID|---'); //altera dados do room
                         res.status(200);
                         res.send(room);
                         next();
                     })
 
                     .catch((err) => {
-                        console.log('"---|error|---"');
+                        console.log('"---|EDITOR error|---"');
                         res.status(404);
                         next();
                     });
@@ -242,14 +242,14 @@ router.route('/editor/rooms')
     
                     Rooms.findById(roomId)
                         .then((room) => {
-                            console.log('---|find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                            console.log('---|EDITOR find one room by ID return tags|---'); //retorna as tags do room pelo Id
                             res.status(200);
                             res.send(tags);
                             next();
                         })
     
                         .catch((err) => {
-                            console.log('"---|error|---"');
+                            console.log('"---|EDITOR error|---"');
                             res.status(404);
                             next();
                         });
@@ -267,13 +267,13 @@ router.route('/user/rooms')
         .get(function (req, res, next) {
             Rooms.findAll()
                 .then((rooms) => {
-                    console.log('---|all rooms|---'); //retorna todos os rooms
+                    console.log('---|USER all rooms|---'); //retorna todos os rooms
                     res.send(rooms);
                     next();
                 })
 
                 .catch((err) => {
-                    console.log('"---|error|---"');
+                    console.log('"---|USER error|---"');
                     next();
                 });
         })
@@ -286,14 +286,14 @@ router.route('/user/rooms')
 
                 Rooms.findById(roomId)
                     .then((room) => {
-                        console.log('---|find one room by ID|---'); //retorna o room pelo Id
+                        console.log('---|USER find one room by ID|---'); //retorna o room pelo Id
                         res.status(200);
                         res.send(room);
                         next();
                     })
 
                     .catch((err) => {
-                        console.log('"---|error|---"');
+                        console.log('"---|USER error|---"');
                         res.status(404);
                         next();
                     });
@@ -308,14 +308,14 @@ router.route('/user/rooms')
     
                     Rooms.findById(roomId)
                         .then((room) => {
-                            console.log('---|find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                            console.log('---|USER find one room by ID return tags|---'); //retorna as tags do room pelo Id
                             res.status(200);
                             res.send(tags);
                             next();
                         })
     
                         .catch((err) => {
-                            console.log('"---|error|---"');
+                            console.log('"---|USER error|---"');
                             res.status(404);
                             next();
                         });
