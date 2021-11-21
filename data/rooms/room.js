@@ -3,11 +3,15 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let Tags = new Schema({
-    typeRoom: { type: String, required: true },
+    typeRoom: { type: String, required: true},
     nPool: { type: Number, required: false, default: 0},
     carPark: { type: Boolean, required: false, default: false},
     breakfast: { type: Boolean, required: false, default: false},
-    lunch: { type: Boolean, required: false, default: false}
+    lunch: { type: Boolean, required: false, default: false},
+    spa: { type: Boolean, required: false, default: false},
+    sauna: {type: Boolean, required: false, default: false},
+    vip: {type: Boolean, required: false, default: false},
+    nStars: {type: Number, required: true, }
 });
 
 /*

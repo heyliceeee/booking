@@ -6,7 +6,8 @@ function RoomService(RoomModel){
         findAll,
         findById,
         update,
-        removeById
+        removeById,
+        findByTag
     };
 
 
@@ -80,6 +81,18 @@ function RoomService(RoomModel){
                 if(err) reject(err);
                 console.log(err);
                 resolve();
+            });
+        });
+    }
+    
+    //procurar room por id
+    function findByTag(id){
+        return new Promise(function (resolve, reject) {
+            RoomModel.findByTag(id, function (err, user) {
+                if(err) reject(err);
+
+                //objecto de todos os users
+                resolve(user);
             });
         });
     }
