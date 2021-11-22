@@ -11,7 +11,7 @@ function UserService(UserModel){
         findUser,
         createPassword,
         comparePassword,
-        checkRole,
+        checkRole
     };
 
 
@@ -120,15 +120,7 @@ function UserService(UserModel){
 
 
     //verificar role
-    function checkRole(role, req, res, next) {
-
-        if(role.includes(user.role)){
-            next();
-        }
-
-        return res.status(401);
-    }
-
+    function checkRole(role) {}
 
     return service;
 }
