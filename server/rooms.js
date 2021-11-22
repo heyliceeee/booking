@@ -284,6 +284,51 @@ function RoomRouter() {
                 })
 
 
+        router.route('/admin/rooms/:description')
+            //GET - findById room
+            .get(function (req, res, next) {
+    
+                    role = "admin";
+    
+                    let description = req.params['description'];
+                    let token = req.headers['x-access-token'];
+    
+    
+                    if(!token) {
+    
+                        return res.status(401).send({ auth: false, message: 'No token provided.' })
+                    }
+    
+    
+                    return Users.verifyToken(token)
+                        .then((decoded) => {
+    
+                            Rooms.findByDescription(description)
+                                .then((room) => {
+                                    console.log('---|ADMIN find room by description|---'); //retorna o room pelo Id
+                                    res.status(200);
+                                    res.send(room);
+                                    next();
+                                })
+    
+    
+                                .catch((err) => {
+                                    console.log('---|ADMIN error|---');
+                                    console.log(err);
+                                    res.status(404);
+                                    next();
+                                });
+                        })
+                        
+                        .catch((err) => {
+                            console.log("error");
+                            res.status(500);
+                            res.send(err);
+                            next();
+                        });
+            })
+
+
 
 
 //-------------------------------------------------------------------------------------//
