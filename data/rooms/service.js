@@ -40,7 +40,7 @@ function RoomService(RoomModel){
                 //objecto de todos os users
                 resolve(users);
             });
-        });
+        }).sort(price);
     }
 
     //procurar room por id
@@ -59,7 +59,7 @@ function RoomService(RoomModel){
     function findByDescription(description){
         return new Promise(function (resolve, reject){
 
-            RoomModel.find({description}, function (err, users) {
+            RoomModel.find({description: new RegExp(description)}, function (err, users) {
                 if (err) reject(err);
 
                 //objecto de todos os users

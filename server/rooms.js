@@ -40,6 +40,8 @@ function RoomRouter() {
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
 
+            let price = req.body.price;
+
             if(!token) {
 
                 return res.status(401).send({ auth: false, message: 'No token provided.' })
@@ -65,7 +67,7 @@ function RoomRouter() {
                 .catch((err) => {
                     console.log("error");
                     res.status(500);
-                    res.send(err);
+                    console.log(err);
                     next();
                 });
         })
@@ -285,7 +287,7 @@ function RoomRouter() {
 
 
         router.route('/admin/rooms/:description')
-            //GET - findById room
+            //GET - findByDescription room
             .get(function (req, res, next) {
     
                     role = "admin";
