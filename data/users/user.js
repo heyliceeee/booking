@@ -6,7 +6,7 @@ let UserSchema = new Schema({
     name: {type: String, required: true, unique: true},
     email: { type: String, required: true},
     password: { type: String, required: true},
-    role : { type: String, default: client, enum: ["client" , "manager" ,  "admin"]}
+    role : { type: String, default: "user", enum: ["user", "editor",  "admin"]}
 });
 
 //the schema is useless so far

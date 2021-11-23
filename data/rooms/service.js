@@ -7,13 +7,12 @@ function RoomService(RoomModel){
         findById,
         update,
         removeById,
-        findByTag
+        findByDescription
     };
 
 
     //criar room
     function create(values){
-        console.log("teste")
         let newRoom = RoomModel(values);
         return save(newRoom); //guarda novo room
     }
@@ -41,7 +40,7 @@ function RoomService(RoomModel){
                 //objecto de todos os users
                 resolve(users);
             });
-        });
+        }).sort(price);
     }
 
     //procurar room por id
@@ -52,6 +51,19 @@ function RoomService(RoomModel){
 
                 //objecto de todos os users
                 resolve(user);
+            });
+        });
+    }
+
+    //procurar room por description (full search)
+    function findByDescription(description){
+        return new Promise(function (resolve, reject){
+
+            RoomModel.find({description: new RegExp(description)}, function (err, users) {
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
             });
         });
     }
@@ -81,18 +93,6 @@ function RoomService(RoomModel){
                 if(err) reject(err);
                 console.log(err);
                 resolve();
-            });
-        });
-    }
-    
-    //procurar room por id
-    function findByTag(id){
-        return new Promise(function (resolve, reject) {
-            RoomModel.findByTag(id, function (err, user) {
-                if(err) reject(err);
-
-                //objecto de todos os users
-                resolve(user);
             });
         });
     }
