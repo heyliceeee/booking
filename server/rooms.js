@@ -35,12 +35,11 @@ function RoomRouter() {
         //GET - findAll rooms
         .get(function (req, res, next) {
 
-            role = "admin";
-           
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
-
             let price = req.body.price;
+            let role = "admin";
+
 
             if(!token) {
 
@@ -50,18 +49,29 @@ function RoomRouter() {
             return Users.verifyToken(token)
                 .then((decoded) => {
 
-                    Rooms.findAll()
-                        .then((rooms) => {
-                            console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
-                            res.send(rooms);
-                            next();
-                })
+                    console.log({ auth: true, decoded });
 
-                        .catch((err) => {
-                            console.log('"---|ADMIN error|---"');
-                            console.log(err);
-                            next();
-                        });
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
+                        Rooms.findAll()
+                            .then((rooms) => {
+                                console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
+                                res.send(rooms);
+                                next();
+                            })
+
+                            .catch((err) => {
+                                console.log('"---|ADMIN error|---"');
+                                console.log(err);
+                                next();
+                            });
+                    }
                 })
 
                 .catch((err) => {
@@ -75,12 +85,12 @@ function RoomRouter() {
         //POST - create rooms
         .post(function (req, res, next) {
 
-            role = "admin";
-
             console.log('---|ADMIN create room|---');
 
             let token = req.headers['x-access-token'];
             let body = req.body;
+            let role = "admin";
+
 
             if(!token) {
 
@@ -90,13 +100,23 @@ function RoomRouter() {
 
             return Users.verifyToken(token)
                 .then((decoded) => {
-                    Rooms.create(body)
-                        .then(() => {
-                            console.log('save');
-                            res.status(200);
-                            res.send(body);
-                            next();
-                        })
+
+                    console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+                        Rooms.create(body)
+                            .then(() => {
+                                console.log('save');
+                                res.status(200);
+                                res.send(body);
+                                next();
+                            })
 
                         .catch((err) => {
                             console.log('"---|ADMIN error|---"');
@@ -105,6 +125,7 @@ function RoomRouter() {
                             res.status(401);
                             next();
                         });
+                    }
                 })
 
                 .catch((err) => {
@@ -120,10 +141,9 @@ function RoomRouter() {
             //GET - findById room
             .get(function (req, res, next) {
 
-                role = "admin";
-
                 let roomId = req.params['roomId'];
                 let token = req.headers['x-access-token'];
+                let role = "admin";
 
 
                 if(!token) {
@@ -135,20 +155,30 @@ function RoomRouter() {
                 return Users.verifyToken(token)
                     .then((decoded) => {
 
-                        Rooms.findById(roomId)
-                            .then((room) => {
-                                console.log('---|ADMIN find one room by ID|---'); //retorna o room pelo Id
-                                res.status(200);
-                                res.send(room);
-                                next();
-                            })
+                        console.log({ auth: true, decoded });
+
+                        if(decoded.role != role){
+
+                            console.log("---|unauthorized user|---");
+                            res.status(500);
+                            next();
+
+                        } else {
+                            Rooms.findById(roomId)
+                                .then((room) => {
+                                    console.log('---|ADMIN find one room by ID|---'); //retorna o room pelo Id
+                                    res.status(200);
+                                    res.send(room);
+                                    next();
+                                })
 
 
-                            .catch((err) => {
-                                console.log('"---|ADMIN error|---"');
-                                res.status(404);
-                                next();
-                            });
+                                .catch((err) => {
+                                    console.log('"---|ADMIN error|---"');
+                                    res.status(404);
+                                    next();
+                                });
+                        }
                     })
                     
                     .catch((err) => {
@@ -179,12 +209,22 @@ function RoomRouter() {
                 return Users.verifyToken(token)
                     .then((decoded) => {
 
-                        Rooms.update(roomId, body)
-                            .then((room) => {
-                                console.log('---|ADMIN update one room by ID|---'); //altera dados do room
-                                res.status(200);
-                                res.send(room);
-                                next();
+                        console.log({ auth: true, decoded });
+
+                        if(decoded.role != role){
+
+                            console.log("---|unauthorized user|---");
+                            res.status(500);
+                            next();
+
+                        } else {
+
+                            Rooms.update(roomId, body)
+                                .then((room) => {
+                                    console.log('---|ADMIN update one room by ID|---'); //altera dados do room
+                                    res.status(200);
+                                    res.send(room);
+                                    next();
                             })
 
                             .catch((err) => {
@@ -192,6 +232,7 @@ function RoomRouter() {
                                 res.status(404);
                                 next();
                             });
+                        }
                     })
 
                     .catch((err) => {
@@ -205,7 +246,7 @@ function RoomRouter() {
             //DELETE - delete room by ID
             .delete(function (req, res, next) {
 
-                role = "admin";
+                let role = "admin";
 
                 let roomId = req.params['roomId'];
                 let token = req.headers['x-access-token'];
@@ -220,18 +261,29 @@ function RoomRouter() {
                 return Users.verifyToken(token)
                     .then((decoded) => {
 
-                        Rooms.removeById(roomId)
-                            .then(() => {
-                                console.log("---|ADMIN delete one room by ID|---")
-                                res.status(200);
-                                next();
-                            })
+                        console.log({ auth: true, decoded });
 
-                            .catch((err) => {
-                                console.log('"---|ADMIN error|---"');
-                                res.status(404);
-                                next();
-                            });
+                        if(decoded.role != role){
+
+                            console.log("---|unauthorized user|---");
+                            res.status(500);
+                            next();
+
+                        } else {
+
+                            Rooms.removeById(roomId)
+                                .then(() => {
+                                    console.log("---|ADMIN delete one room by ID|---")
+                                    res.status(200);
+                                    next();
+                                })
+
+                                .catch((err) => {
+                                    console.log('"---|ADMIN error|---"');
+                                    res.status(404);
+                                    next();
+                                });
+                        }                       
                     })
 
                     .catch((err) => {
@@ -247,7 +299,7 @@ function RoomRouter() {
                 //GET - findById room return tags
                 .get(function (req, res, next) {
 
-                    role = "admin";
+                    let role = "admin";
 
                     let roomId = req.params['roomId'];
                     let tags = req.body.tags;
@@ -262,19 +314,31 @@ function RoomRouter() {
 
                     return Users.verifyToken(token)
                         .then((decoded) => {
-                            Rooms.findById(roomId)
-                                .then((room) => {
-                                    console.log('---|ADMIN find one room by ID return tags|---'); //retorna as tags do room pelo Id
-                                    res.status(200);
-                                    res.send(tags);
-                                    next();
-                                })
+
+                            console.log({ auth: true, decoded });
+
+                            if(decoded.role != role){
+
+                                console.log("---|unauthorized user|---");
+                                res.status(500);
+                                next();
+
+                            } else {
+
+                                Rooms.findById(roomId)
+                                    .then((room) => {
+                                        console.log('---|ADMIN find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                                        res.status(200);
+                                        res.send(tags);
+                                        next();
+                                    })
     
-                                .catch((err) => {
-                                    console.log('"---|ADMIN error|---"');
-                                    res.status(404);
-                                    next();
-                                });
+                                    .catch((err) => {
+                                        console.log('"---|ADMIN error|---"');
+                                        res.status(404);
+                                        next();
+                                    });
+                            }                            
                         })
 
                         .catch((err) => {
@@ -290,7 +354,7 @@ function RoomRouter() {
             //GET - findByDescription room
             .get(function (req, res, next) {
     
-                    role = "admin";
+                    let role = "admin";
     
                     let description = req.params['description'];
                     let token = req.headers['x-access-token'];
@@ -304,22 +368,33 @@ function RoomRouter() {
     
                     return Users.verifyToken(token)
                         .then((decoded) => {
+
+                            console.log({ auth: true, decoded });
+
+                            if(decoded.role != role){
+
+                                console.log("---|unauthorized user|---");
+                                res.status(500);
+                                next();
+
+                            } else {
+
+                                Rooms.findByDescription(description)
+                                    .then((room) => {
+                                        console.log('---|ADMIN find room by description|---'); //retorna o room pelo Id
+                                        res.status(200);
+                                        res.send(room);
+                                        next();
+                                    })
     
-                            Rooms.findByDescription(description)
-                                .then((room) => {
-                                    console.log('---|ADMIN find room by description|---'); //retorna o room pelo Id
-                                    res.status(200);
-                                    res.send(room);
-                                    next();
-                                })
     
-    
-                                .catch((err) => {
-                                    console.log('---|ADMIN error|---');
-                                    console.log(err);
-                                    res.status(404);
-                                    next();
-                                });
+                                    .catch((err) => {
+                                        console.log('---|ADMIN error|---');
+                                        console.log(err);
+                                        res.status(404);
+                                        next();
+                                    });
+                            }                            
                         })
                         
                         .catch((err) => {
@@ -341,7 +416,7 @@ router.route('/editor/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
 
-            role = "editor";
+            let role = "editor";
            
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
@@ -354,20 +429,29 @@ router.route('/editor/rooms')
             return Users.verifyToken(token)
                 .then((decoded) => {
 
-                    //res.status(202).send({ auth: true, decoded });
+                    console.log({ auth: true, decoded });
 
-                    Rooms.findAll()
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
+                        Rooms.findAll()
                         .then((rooms) => {
                             console.log('---|EDITOR all rooms|---'); //retorna todos os rooms
                             res.send(rooms);
                             next();
-                })
+                        })
 
                         .catch((err) => {
                             console.log('"---|EDITOR error|---"');
                             console.log(err);
                             next();
                         });
+                    }
                 })
 
                 .catch((err) => {
@@ -381,7 +465,7 @@ router.route('/editor/rooms')
         //POST - create rooms
         .post(function (req, res, next) {
 
-            role = "editor";
+            let role = "editor";
 
             console.log('---|EDITOR create room|---');
 
@@ -396,7 +480,18 @@ router.route('/editor/rooms')
 
             return Users.verifyToken(token)
                 .then((decoded) => {
-                    Rooms.create(body)
+
+                    console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
+                        Rooms.create(body)
                         .then(() => {
                             console.log('save');
                             res.status(200);
@@ -411,6 +506,7 @@ router.route('/editor/rooms')
                             res.status(401);
                             next();
                         });
+                    }
                 })
 
                 .catch((err) => {
@@ -426,7 +522,7 @@ router.route('/editor/rooms')
             //GET - findById room
             .get(function (req, res, next) {
 
-                role = "editor";
+                let role = "editor";
 
                 let roomId = req.params['roomId'];
                 let token = req.headers['x-access-token'];
@@ -440,6 +536,16 @@ router.route('/editor/rooms')
 
                 return Users.verifyToken(token)
                     .then((decoded) => {
+
+                        console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
 
                         Rooms.findById(roomId)
                             .then((room) => {
@@ -455,6 +561,7 @@ router.route('/editor/rooms')
                                 res.status(404);
                                 next();
                             });
+                    }   
                     })
                     
                     .catch((err) => {
@@ -468,7 +575,7 @@ router.route('/editor/rooms')
             //PUT - update room by ID
             .put(function (req, res, next) {
 
-                role = "editor";
+                let role = "editor";
 
                 let roomId = req.params['roomId'];
                 let body = req.body;
@@ -485,6 +592,16 @@ router.route('/editor/rooms')
                 return Users.verifyToken(token)
                     .then((decoded) => {
 
+                        console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
                         Rooms.update(roomId, body)
                             .then((room) => {
                                 console.log('---|EDITOR update one room by ID|---'); //altera dados do room
@@ -498,6 +615,7 @@ router.route('/editor/rooms')
                                 res.status(404);
                                 next();
                             });
+                    } 
                     })
 
                     .catch((err) => {
@@ -513,7 +631,7 @@ router.route('/editor/rooms')
                 //GET - findById room return tags
                 .get(function (req, res, next) {
 
-                    role = "editor";
+                    let role = "editor";
 
                     let roomId = req.params['roomId'];
                     let tags = req.body.tags;
@@ -528,7 +646,18 @@ router.route('/editor/rooms')
 
                     return Users.verifyToken(token)
                         .then((decoded) => {
-                            Rooms.findById(roomId)
+
+                            console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
+                        Rooms.findById(roomId)
                                 .then((room) => {
                                     console.log('---|EDITOR find one room by ID return tags|---'); //retorna as tags do room pelo Id
                                     res.status(200);
@@ -541,6 +670,9 @@ router.route('/editor/rooms')
                                     res.status(404);
                                     next();
                                 });
+                    }
+
+                            
                         })
 
                         .catch((err) => {
@@ -562,10 +694,9 @@ router.route('/user/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
 
-            role = "user";
-           
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
+            let role = "user";
 
             if(!token) {
 
@@ -575,26 +706,34 @@ router.route('/user/rooms')
             return Users.verifyToken(token)
                 .then((decoded) => {
 
-                    //res.status(202).send({ auth: true, decoded });
+                    console.log({ auth: true, decoded });
 
-                    Rooms.findAll()
-                        .then((rooms) => {
-                            console.log('---|USER all rooms|---'); //retorna todos os rooms
-                            res.send(rooms);
-                            next();
-                })
+                    if(decoded.role != role){
 
-                        .catch((err) => {
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+                        Rooms.findAll()
+                            .then((rooms) => {
+                                console.log('---|USER all rooms|---'); //retorna todos os rooms
+                                res.send(rooms);
+                                next();
+                            })
+
+                            .catch((err) => {
                             console.log('"---|USER error|---"');
                             console.log(err);
                             next();
-                        });
+                            });
+                    }
                 })
 
                 .catch((err) => {
                     console.log("error");
                     res.status(500);
-                    res.send(err);
+                    console.log(err);
                     next();
                 });
         })
@@ -604,10 +743,9 @@ router.route('/user/rooms')
             //GET - findById room
             .get(function (req, res, next) {
 
-                role = "user";
-
                 let roomId = req.params['roomId'];
                 let token = req.headers['x-access-token'];
+                let role = "user";
 
 
                 if(!token) {
@@ -618,6 +756,16 @@ router.route('/user/rooms')
 
                 return Users.verifyToken(token)
                     .then((decoded) => {
+
+                        console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
 
                         Rooms.findById(roomId)
                             .then((room) => {
@@ -633,6 +781,7 @@ router.route('/user/rooms')
                                 res.status(404);
                                 next();
                             });
+                    }
                     })
                     
                     .catch((err) => {
@@ -643,12 +792,67 @@ router.route('/user/rooms')
                     });
             })
 
+            //POST - booking - FAZER DEPOIS     
+            .post(function (req, res, next) {
+
+                let role = "user";
+
+                console.log('---|USER booking|---');
+
+                let token = req.headers['x-access-token'];
+                let body = req.body;
+
+                if(!token) {
+
+                    return res.status(401).send({ auth: false, message: 'No token provided.' })
+                }
+
+
+                return Users.verifyToken(token)
+                    .then((decoded) => {
+
+                        console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
+                          Rooms.create(body)
+                            .then(() => {
+                                console.log('save');
+                                res.status(200);
+                                res.send(body);
+                                next();
+                            })
+
+                            .catch((err) => {
+                                console.log('"---|USER error|---"');
+                                console.log('room already exists');
+                                err.status = err.status || 500;
+                                res.status(401);
+                                next();
+                            });
+                    } 
+                    })
+
+                    .catch((err) => {
+                        console.log("error");
+                        res.status(500);
+                        res.send(err);
+                        next();
+                    });
+            });
+
 
             router.route('/user/rooms/:roomId/tags')
-                 //GET - findById room return tags
+                 //GET - findById room return tags - DA ERRO
                  .get(function (req, res, next) {
 
-                    role = "user";
+                    let role = "user";
 
                     let roomId = req.params['roomId'];
                     let tags = req.body.tags;
@@ -663,19 +867,31 @@ router.route('/user/rooms')
 
                     return Users.verifyToken(token)
                         .then((decoded) => {
-                            Rooms.findById(roomId)
-                                .then((room) => {
-                                    console.log('---|USER find one room by ID return tags|---'); //retorna as tags do room pelo Id
-                                    res.status(200);
-                                    res.send(tags);
-                                    next();
-                                })
+
+                            console.log({ auth: true, decoded });
+
+                            if(decoded.role != role){
+
+                                console.log("---|unauthorized user|---");
+                                res.status(500);
+                                next();
+
+                            } else {
+
+                                Rooms.findById(roomId)
+                                    .then((room) => {
+                                        console.log('---|USER find one room by ID return tags|---'); //retorna as tags do room pelo Id
+                                        res.status(200);
+                                        res.send(tags);
+                                        next();
+                                    })
     
-                                .catch((err) => {
-                                    console.log('"---|USER error|---"');
-                                    res.status(404);
-                                    next();
-                                });
+                                    .catch((err) => {
+                                        console.log('"---|USER error|---"');
+                                        res.status(404);
+                                        next();
+                                    });
+                            }                            
                         })
 
                         .catch((err) => {
