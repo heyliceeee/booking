@@ -101,12 +101,61 @@ function AuthRouter(){
                 .catch((err) => {
                     console.log("error");
                     res.status(500);
-                    res.send(err);
+                    console.log(err);
                     next();
                 });
         });
 
 
+    router.route('/admin/users')
+        //GET - verify token
+        .get(function (req, res, next) {
+
+            console.log('---|verify token|---');
+            let token = req.headers['x-access-token'];
+            let role = "admin";
+
+
+            if(!token) {
+
+                return res.status(401).send({ auth: false, message: 'No token provided.' })
+            }
+
+            return Users.verifyToken(token)
+                .then((decoded) => {
+
+                    console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
+                        Users.findAll()
+                            .then((users) => {
+                                console.log('---|ADMIN all users|---'); //retorna todos os rooms
+                                res.send(users);
+                                next();
+                            })
+
+                            .catch((err) => {
+                                console.log('"---|ADMIN error|---"');
+                                console.log(err);
+                                next();
+                            });
+                    }
+                })
+
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    console.log(err);
+                    next();
+                });
+        });    
 
 
 //-------------------------------------------------------------------------------------//

@@ -9,6 +9,7 @@ function UserService(UserModel){
         createToken,
         verifyToken,
         findUser,
+        findAll,
         createPassword,
         comparePassword
     };
@@ -55,7 +56,7 @@ function UserService(UserModel){
 
         console.log(user);
 
-        let token = jwt.sign({ id: user._id, role: user.role}, config.secret, {
+        let token = jwt.sign({ id: user._id, role: user.role, name: user.name }, config.secret, {
             expiresIn: config.expiresPassword 
         });
 
@@ -107,6 +108,20 @@ function UserService(UserModel){
                 })
         })
     }
+
+    //procurar users
+    function findAll(){
+        return new Promise(function (resolve, reject){
+
+            UserModel.find({}, function (err, users) {
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
+            });
+        })
+    }
+        
 
 
     //criar password encriptada

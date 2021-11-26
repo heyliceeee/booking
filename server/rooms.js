@@ -683,6 +683,61 @@ router.route('/editor/rooms')
                         });
                 })
 
+            router.route('/editor/rooms/:description')
+            //GET - findByDescription room
+            .get(function (req, res, next) {
+    
+                    let role = "editor";
+    
+                    let description = req.params['description'];
+                    let token = req.headers['x-access-token'];
+    
+    
+                    if(!token) {
+    
+                        return res.status(401).send({ auth: false, message: 'No token provided.' })
+                    }
+    
+    
+                    return Users.verifyToken(token)
+                        .then((decoded) => {
+
+                            console.log({ auth: true, decoded });
+
+                            if(decoded.role != role){
+
+                                console.log("---|unauthorized user|---");
+                                res.status(500);
+                                next();
+
+                            } else {
+
+                                Rooms.findByDescription(description)
+                                    .then((room) => {
+                                        console.log('---|EDITOR find room by description|---'); //retorna o room pelo Id
+                                        res.status(200);
+                                        res.send(room);
+                                        next();
+                                    })
+    
+    
+                                    .catch((err) => {
+                                        console.log('---|EDITOR error|---');
+                                        console.log(err);
+                                        res.status(404);
+                                        next();
+                                    });
+                            }                            
+                        })
+                        
+                        .catch((err) => {
+                            console.log("error");
+                            res.status(500);
+                            res.send(err);
+                            next();
+                        });
+            })
+
 
 
 
@@ -795,12 +850,11 @@ router.route('/user/rooms')
             //POST - booking - FAZER DEPOIS     
             .post(function (req, res, next) {
 
-                let role = "user";
-
-                console.log('---|USER booking|---');
-
                 let token = req.headers['x-access-token'];
                 let body = req.body;
+                let role = "user";
+                let roomId = req.params['roomId'];
+
 
                 if(!token) {
 
@@ -821,11 +875,14 @@ router.route('/user/rooms')
 
                     } else {
 
-                          Rooms.create(body)
-                            .then(() => {
-                                console.log('save');
+                          Rooms.findById(roomId)
+                            .then((room) => {
+                                console.log('---|USER booking|---');
                                 res.status(200);
-                                res.send(body);
+                                res.send(room);
+                                console.log(body);
+                                console.log(decoded.id);
+                                console.log(decoded.name);
                                 next();
                             })
 
@@ -903,6 +960,63 @@ router.route('/user/rooms')
                 })
 
 
+
+            router.route('/user/rooms/:description')
+                //GET - findByDescription room
+                .get(function (req, res, next) {
+    
+                    let role = "user";
+    
+                    let description = req.params['description'];
+                    let token = req.headers['x-access-token'];
+    
+    
+                    if(!token) {
+    
+                        return res.status(401).send({ auth: false, message: 'No token provided.' })
+                    }
+    
+    
+                    return Users.verifyToken(token)
+                        .then((decoded) => {
+
+                            console.log({ auth: true, decoded });
+
+                            if(decoded.role != role){
+
+                                console.log("---|unauthorized user|---");
+                                res.status(500);
+                                next();
+
+                            } else {
+
+                                Rooms.findByDescription(description)
+                                    .then((room) => {
+                                        console.log('---|USER find room by description|---'); //retorna o room pelo Id
+                                        res.status(200);
+                                        res.send(room);
+                                        next();
+                                    })
+    
+    
+                                    .catch((err) => {
+                                        console.log('---|USER error|---');
+                                        console.log(err);
+                                        res.status(404);
+                                        next();
+                                    });
+                            }                            
+                        })
+                        
+                        .catch((err) => {
+                            console.log("error");
+                            res.status(500);
+                            res.send(err);
+                            next();
+                        });
+            })
+
+
 //-------------------------------------------------------------------------------------//
 //------------------------------------ALL ROUTES--------------------------------------//
 //-----------------------------------------------------------------------------------//
@@ -966,6 +1080,30 @@ router.route('/rooms')
                         });
                 })
 
+
+                router.route('/rooms/:description')
+                //GET - findByDescription room
+                .get(function (req, res, next) {
+                    
+                    let description = req.params['description'];
+    
+    
+                    Rooms.findByDescription(description)
+                        .then((room) => {
+                            console.log('---|find room by description|---'); //retorna o room pelo Id
+                            res.status(200);
+                            res.send(room);
+                            next();
+                        })
+    
+    
+                        .catch((err) => {
+                            console.log('---|error|---');
+                            console.log(err);
+                            res.status(404);
+                            next();
+                        });
+                })
 
 
     router.route('/hotel')
