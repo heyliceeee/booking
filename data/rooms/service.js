@@ -40,7 +40,9 @@ function RoomService(RoomModel){
                 //objecto de todos os users
                 resolve(users);
             });
-        }).sort(price);
+        })
+        //.sort(price) PARA ORDENAR
+        ;
     }
 
     //procurar room por id

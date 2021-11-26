@@ -25,14 +25,12 @@ function AuthRouter(){
         //POST - create user
         .post(function (req, res, next) {
             console.log('---|create user|---');
-
-            role = "admin";
-
+            
             const body = req.body;
 
             console.log(body);
 
-            Users.create(body, role)
+            Users.create(body)
                 .then((user) => Users.createToken(user))
 
                 .then((response) => {
@@ -85,13 +83,11 @@ function AuthRouter(){
         //POST - validar se o user existe na BD
         .post(function (req, res, next) {
             console.log('---|verifiy user if exists|---');
+
             let name = req.body.name;
             let password = req.body.password;
+            let role = req.body.role;
 
-            role = "admin";
-
-            //console.log(name);
-            //console.log(password);
 
             Users.findUser({ name, password, role })
                 .then((user) => Users.createToken(user))
@@ -124,13 +120,11 @@ function AuthRouter(){
         .post(function (req, res, next) {
             console.log('---|create user|---');
 
-            role = "editor";
-
             const body = req.body;
 
             console.log(body);
 
-            Users.create(body, role)
+            Users.create(body)
                 .then((user) => Users.createToken(user))
 
                 .then((response) => {
@@ -186,11 +180,8 @@ function AuthRouter(){
             console.log('---|verifiy user if exists|---');
             let name = req.body.name;
             let password = req.body.password;
+            let role = req.body.role;
 
-            role = "editor";
-
-            //console.log(name);
-            //console.log(password);
 
             Users.findUser({ name, password, role })
                 .then((user) => Users.createToken(user))
@@ -222,14 +213,12 @@ function AuthRouter(){
         //POST - create user
         .post(function (req, res, next) {
             console.log('---|create user|---');
-
-            role = "admin";
-
+            
             const body = req.body;
 
             console.log(body);
 
-            Users.create(body, role)
+            Users.create(body)
                 .then((user) => Users.createToken(user))
 
                 .then((response) => {
@@ -282,13 +271,11 @@ function AuthRouter(){
         //POST - validar se o user existe na BD
         .post(function (req, res, next) {
             console.log('---|verifiy user if exists|---');
+
             let name = req.body.name;
             let password = req.body.password;
-
-            role = "user";
-
-            //console.log(name);
-            //console.log(password);
+            let role = req.body.role;
+            
 
             Users.findUser({ name, password, role })
                 .then((user) => Users.createToken(user))

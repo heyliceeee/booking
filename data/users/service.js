@@ -10,14 +10,13 @@ function UserService(UserModel){
         verifyToken,
         findUser,
         createPassword,
-        comparePassword,
-        checkRole
+        comparePassword
     };
 
 
     //criar user
-    function create(user, role){
-        return createPassword(user, role)
+    function create(user){
+        return createPassword(user)
             .then((hashPassword, err) => {
                 if(err){
                     return Promise.reject("Not saved");
@@ -25,8 +24,7 @@ function UserService(UserModel){
 
                 let newUserWithPassword = {
                     ...user,
-                    password: hashPassword,
-                    role
+                    password: hashPassword
                 }
 
                 let newUser = UserModel(newUserWithPassword);
@@ -54,8 +52,10 @@ function UserService(UserModel){
 
     //criar token
     function createToken(user){
-        
-        let token = jwt.sign({ id: user._id, }, config.secret, {
+
+        console.log(user);
+
+        let token = jwt.sign({ id: user._id, role: user.role}, config.secret, {
             expiresIn: config.expiresPassword 
         });
 
@@ -84,10 +84,12 @@ function UserService(UserModel){
     function findUser({ name, password, role }) {
         return new Promise(function (resolve, reject) {
 
-            UserModel.findOne({ name, role }, function (err, user) {
+        UserModel.findOne({ name }, function (err, user) {
+
                 if(err) reject(err);
                 //objeto de todos os users
 
+            
                 if(!user){
                     reject("This data is wrong");
                 }
@@ -117,10 +119,6 @@ function UserService(UserModel){
     function comparePassword(password, hash){
         return bcrypt.compare(password, hash);
     }
-
-
-    //verificar role
-    function checkRole(role) {}
 
     return service;
 }
