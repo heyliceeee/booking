@@ -1105,14 +1105,6 @@ router.route('/rooms')
                         });
                 })
 
-
-    router.route('/hotel')
-        //PUT - 
-        .put(function (req, res) {
-            console.log('put');
-            res.send('put');
-        });
-
     return router;
 }
 

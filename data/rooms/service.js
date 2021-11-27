@@ -41,7 +41,7 @@ function RoomService(RoomModel){
                 resolve(users);
             });
         })
-        //.sort(price) PARA ORDENAR
+        //.sort(price)
         ;
     }
 

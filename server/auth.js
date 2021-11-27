@@ -12,6 +12,13 @@ function AuthRouter(){
     router.use(express.urlencoded( 
        { limit: '100mb', extended: true }
     ));
+
+    router.use(function (req, res, next) {
+        var today = new Date(); 
+
+        console.log('Time:', today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
+        next();
+    });
     //fim camadas
 
 
