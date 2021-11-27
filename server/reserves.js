@@ -114,7 +114,7 @@ function ReserveRouter(){
 
                         return Rooms.findById(roomId)
                             .then(() => Reserves.create(body))
-                            
+
                             .then(() => {
                                 console.log('save');
                                 res.status(200);
@@ -122,13 +122,15 @@ function ReserveRouter(){
                                 next();
                             })
 
-                                .catch((err) => {
+                            .catch((err) => {
                                     console.log('"---|ADMIN error|---"');
-                                    console.log(err);
+                                    //console.log(err);
                                     err.status = err.status || 500;
                                     res.status(401);
                                     next();
-                                });
+                            });
+
+                            
                     }
                 })
 

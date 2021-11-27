@@ -1,13 +1,10 @@
 //vai devolver sempre as ações q podemos fazer na BD
 
-const { verifyToken } = require("../users");
-
 function ReserveService(ReserveModel){
     let service = {
         create,
         findAll,
         findById,
-        update,
         removeById,
         findByName
     };
@@ -74,20 +71,6 @@ function ReserveService(ReserveModel){
                 if(err) reject(err);
 
                 resolve(users);
-            });
-        });
-    }
-
-
-    //atualizar reserve
-    function update(id, values){
-        return new Promise(function (resolve, reject){
-
-            ReserveModel.findByIdAndUpdate(id, values, function (err, user){
-
-                if(err) reject(err);
-
-                resolve(user);
             });
         });
     }

@@ -193,10 +193,8 @@ function RoomRouter() {
             .put(function (req, res, next) {
 
                 role = "admin";
-
                 let roomId = req.params['roomId'];
                 let body = req.body;
-
                 let token = req.headers['x-access-token'];
 
 
