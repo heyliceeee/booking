@@ -1,5 +1,7 @@
 //vai devolver sempre as ações q podemos fazer na BD
 
+const Room = require("./room");
+
 function RoomService(RoomModel){
     let service = {
         create,
@@ -39,10 +41,9 @@ function RoomService(RoomModel){
 
                 //objecto de todos os users
                 resolve(users);
-            });
+            }).sort('price');
         })
-        //.sort(price)
-        ;
+        
     }
 
     //procurar room por id

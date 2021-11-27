@@ -5,6 +5,8 @@ function ReserveService(ReserveModel){
         create,
         findAll,
         findById,
+        findByUserId,
+        update,
         removeById,
         findByName
     };
@@ -62,6 +64,20 @@ function ReserveService(ReserveModel){
     }
 
 
+    //procurar reserve por user id
+    function findByUserId(idUser){
+        return new Promise(function (resolve, reject){
+
+            ReserveModel.find({ idUser: idUser}, function (err, user){
+
+                if(err) reject(err);
+
+                resolve(user);
+            });
+        });
+    }
+
+
     //procurar reserve por name
     function findByName(name){
         return new Promise(function (resolve, reject){
@@ -71,6 +87,20 @@ function ReserveService(ReserveModel){
                 if(err) reject(err);
 
                 resolve(users);
+            });
+        });
+    }
+
+
+    //atualizar reserve
+    function update(roomId, values){
+        return new Promise(function (resolve, reject){
+
+            ReserveModel.findByIdAndUpdate(roomId, values, function (err, user){
+
+                if(err) reject(err);
+
+                resolve(user);
             });
         });
     }
