@@ -61,12 +61,11 @@ function ReserveService(ReserveModel){
 
     //procurar reserve por id
     function findById(id){
-        return new Promise(function (resolve, reject){
-
-            ReserveModel.findById(id, function (err, user){
-
+        return new Promise(function (resolve, reject) {
+            ReserveModel.findById(id, function (err, user) {
                 if(err) reject(err);
 
+                //objecto de todos os users
                 resolve(user);
             });
         });

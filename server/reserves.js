@@ -199,60 +199,9 @@ function ReserveRouter(){
         })    
 
 
-    router.route('/admin/reserves/:reserveId')    
-        //GET - findById reserve
-        .get(function (req, res, next) {
-
-            let reserveId = req.params['reserveId'];
-            let token = req.headers['x-access-token'];
-            let role = "admin";
-
-
-            if(!token) {
-
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
-
-
-            return Users.verifyToken(token)
-                .then((decoded) => {
-
-                    console.log({ auth: true, decoded });
-
-                    if(decoded.role != role){
-
-                        console.log("---|unauthorized user|---");
-                        res.status(500);
-                        next();
-
-                    } else {
-                        Reserves.findById(reserveId)
-                            .then((reserve) => {
-                                console.log('---|ADMIN find one reserve by ID|---'); //retorna o reserve pelo Id
-                                res.status(200);
-                                res.send(reserve);
-                                next();
-                            })
-
-
-                            .catch((err) => {
-                                console.log('"---|ADMIN error|---"');
-                                res.status(404);
-                                next();
-                            });
-                    }
-                })
-                
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    next();
-                });
-        })
-
-        //PUT - update reserve by ID
-        .put(function (req, res, next) {
+        router.route('/admin/reserves/:reserveId')    
+            //PUT - update reserve by ID
+            .put(function (req, res, next) {
 
             role = "admin";
             let reserveId = req.params['reserveId'];
@@ -301,7 +250,7 @@ function ReserveRouter(){
                     res.send(err);
                     next();
                 });
-        })
+            })
 
         //DELETE - delete room by ID
         .delete(function (req, res, next) {
@@ -753,57 +702,6 @@ function ReserveRouter(){
 
 
     router.route('/user/reserves/:reserveId')    
-        //GET - findById reserve
-        .get(function (req, res, next) {
-
-            let reserveId = req.params['reserveId'];
-            let token = req.headers['x-access-token'];
-            let role = "user";
-
-
-            if(!token) {
-
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
-
-
-            return Users.verifyToken(token)
-                .then((decoded) => {
-
-                    console.log({ auth: true, decoded });
-
-                    if(decoded.role != role){
-
-                        console.log("---|unauthorized user|---");
-                        res.status(500);
-                        next();
-
-                    } else {
-                        Reserves.findById(reserveId)
-                            .then((reserve) => {
-                                console.log('---|USER find one reserve by ID|---'); //retorna o reserve pelo Id
-                                res.status(200);
-                                res.send(reserve);
-                                next();
-                            })
-
-
-                            .catch((err) => {
-                                console.log('"---|USER error|---"');
-                                res.status(404);
-                                next();
-                            });
-                    }
-                })
-                
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    next();
-                });
-        })
-
         //PUT - update reserve by ID
         .put(function (req, res, next) {
 

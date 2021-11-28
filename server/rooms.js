@@ -1,6 +1,7 @@
 const express = require('express');
 const Rooms = require('../data/rooms');
 const Users = require('../data/users');
+const User = require('../data/users/user');
 
 function RoomRouter() {
 
@@ -301,7 +302,6 @@ function RoomRouter() {
                     let role = "admin";
 
                     let roomId = req.params['roomId'];
-                    let tags = req.body.tags;
                     let token = req.headers['x-access-token'];
 
 
@@ -328,7 +328,7 @@ function RoomRouter() {
                                     .then((room) => {
                                         console.log('---|ADMIN find one room by ID return tags|---'); //retorna as tags do room pelo Id
                                         res.status(200);
-                                        res.send(tags);
+                                        res.send(room.tags);
                                         next();
                                     })
     
@@ -390,7 +390,6 @@ function RoomRouter() {
     
                                     .catch((err) => {
                                         console.log('---|ADMIN error|---');
-                                        console.log(err);
                                         res.status(404);
                                         next();
                                     });
@@ -634,9 +633,7 @@ router.route('/editor/rooms')
                 .get(function (req, res, next) {
 
                     let role = "editor";
-
                     let roomId = req.params['roomId'];
-                    let tags = req.body.tags;
                     let token = req.headers['x-access-token'];
 
 
@@ -663,7 +660,7 @@ router.route('/editor/rooms')
                                 .then((room) => {
                                     console.log('---|EDITOR find one room by ID return tags|---'); //retorna as tags do room pelo Id
                                     res.status(200);
-                                    res.send(tags);
+                                    res.send(room.tags);
                                     next();
                                 })
     
@@ -726,7 +723,6 @@ router.route('/editor/rooms')
     
                                     .catch((err) => {
                                         console.log('---|EDITOR error|---');
-                                        console.log(err);
                                         res.status(404);
                                         next();
                                     });
@@ -949,7 +945,7 @@ router.route('/user/rooms')
                                     .then((room) => {
                                         console.log('---|USER find one room by ID return tags|---'); //retorna as tags do room pelo Id
                                         res.status(200);
-                                        res.send(tags);
+                                        res.send(room.tags);
                                         next();
                                     })
     
@@ -1012,7 +1008,6 @@ router.route('/user/rooms')
     
                                     .catch((err) => {
                                         console.log('---|USER error|---');
-                                        console.log(err);
                                         res.status(404);
                                         next();
                                     });
@@ -1084,7 +1079,7 @@ router.route('/rooms')
                         .then((room) => {
                             console.log('---| find one room by ID return tags|---'); //retorna as tags do room pelo Id
                             res.status(200);
-                            res.send(tags);
+                            res.send(room.tags);
                             next();
                         })
     
