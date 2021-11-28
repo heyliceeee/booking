@@ -281,14 +281,14 @@ function ReserveRouter(){
 
                         Reserves.update(reserveId, body)
                             .then((room) => {
-                                console.log('---|ADMIN update one reserve by ID|---'); //altera dados do reserve
+                                console.log('---|admin update one reserve by ID|---'); //altera dados do reserve
                                 res.status(200);
                                 res.send(room);
                                 next();
                         })
 
                         .catch((err) => {
-                            console.log('"---|ADMIN error|---"');
+                            console.log('"---|admin error|---"');
                             res.status(404);
                             next();
                         });
