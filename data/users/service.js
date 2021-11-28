@@ -118,7 +118,9 @@ function UserService(UserModel){
 
                 //objecto de todos os users
                 resolve(users);
-            });
+            })
+            .sort('role') //ordenação crescente por role
+            ;
         })
     }
         

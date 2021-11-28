@@ -37,8 +37,9 @@ function RoomRouter() {
 
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
-            let price = req.body.price;
             let role = "admin";
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
 
 
             if(!token) {
@@ -59,7 +60,7 @@ function RoomRouter() {
 
                     } else {
 
-                        Rooms.findAll()
+                        Rooms.findAll(pageNumber, nPerPage)
                             .then((rooms) => {
                                 console.log('---|ADMIN all rooms|---'); //retorna todos os rooms
                                 res.send(rooms);
@@ -356,7 +357,8 @@ function RoomRouter() {
     
                     let description = req.params['description'];
                     let token = req.headers['x-access-token'];
-    
+                    let pageNumber = req.headers['page'];
+                    let nPerPage = req.headers['limit'];
     
                     if(!token) {
     
@@ -376,8 +378,8 @@ function RoomRouter() {
                                 next();
 
                             } else {
-
-                                Rooms.findByDescription(description)
+    
+                                Rooms.findByDescription(description, pageNumber, nPerPage)
                                     .then((room) => {
                                         console.log('---|ADMIN find room by description|---'); //retorna o room pelo Id
                                         res.status(200);
@@ -418,6 +420,8 @@ router.route('/editor/rooms')
            
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
 
             if(!token) {
 
@@ -437,7 +441,7 @@ router.route('/editor/rooms')
 
                     } else {
 
-                        Rooms.findAll()
+                        Rooms.findAll(pageNumber, nPerPage)
                         .then((rooms) => {
                             console.log('---|EDITOR all rooms|---'); //retorna todos os rooms
                             res.send(rooms);
@@ -689,7 +693,8 @@ router.route('/editor/rooms')
     
                     let description = req.params['description'];
                     let token = req.headers['x-access-token'];
-    
+                    let pageNumber = req.headers['page'];
+                    let nPerPage = req.headers['limit'];
     
                     if(!token) {
     
@@ -710,7 +715,7 @@ router.route('/editor/rooms')
 
                             } else {
 
-                                Rooms.findByDescription(description)
+                                Rooms.findByDescription(description, pageNumber, nPerPage)
                                     .then((room) => {
                                         console.log('---|EDITOR find room by description|---'); //retorna o room pelo Id
                                         res.status(200);
@@ -743,13 +748,19 @@ router.route('/editor/rooms')
 //------------------------------------USER ROUTES------------------------------------ //
 //-----------------------------------------------------------------------------------//
 
+//?page=1&limit=1
+
 router.route('/user/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
 
             console.log('---|verify token|---');
+            
             let token = req.headers['x-access-token'];
             let role = "user";
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
+
 
             if(!token) {
 
@@ -767,8 +778,9 @@ router.route('/user/rooms')
                         res.status(500);
                         next();
 
+
                     } else {
-                        Rooms.findAll()
+                        Rooms.findAll(pageNumber, nPerPage)
                             .then((rooms) => {
                                 console.log('---|USER all rooms|---'); //retorna todos os rooms
                                 res.send(rooms);
@@ -967,7 +979,8 @@ router.route('/user/rooms')
     
                     let description = req.params['description'];
                     let token = req.headers['x-access-token'];
-    
+                    let pageNumber = req.headers['page'];
+                    let nPerPage = req.headers['limit'];
     
                     if(!token) {
     
@@ -988,7 +1001,7 @@ router.route('/user/rooms')
 
                             } else {
 
-                                Rooms.findByDescription(description)
+                                Rooms.findByDescription(description, pageNumber, nPerPage)
                                     .then((room) => {
                                         console.log('---|USER find room by description|---'); //retorna o room pelo Id
                                         res.status(200);
@@ -1022,7 +1035,11 @@ router.route('/user/rooms')
 router.route('/rooms')
         //GET - findAll rooms
         .get(function (req, res, next) {
-            Rooms.findAll()
+
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
+
+            Rooms.findAll(pageNumber, nPerPage)
                 .then((rooms) => {
                     console.log('---|all rooms|---'); //retorna todos os rooms
                     res.send(rooms);
@@ -1084,9 +1101,11 @@ router.route('/rooms')
                 .get(function (req, res, next) {
                     
                     let description = req.params['description'];
+                    let pageNumber = req.headers['page'];
+                    let nPerPage = req.headers['limit'];
     
     
-                    Rooms.findByDescription(description)
+                    Rooms.findByDescription(description, pageNumber, nPerPage)
                         .then((room) => {
                             console.log('---|find room by description|---'); //retorna o room pelo Id
                             res.status(200);
