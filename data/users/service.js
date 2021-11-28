@@ -1,20 +1,18 @@
 const config = require("../../config");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-//const mailgun = require("mailgun-js");
-//const DOMAIN = 'sandboxce44548564ea43bfa2ae1e646dea13d2.mailgun.org';
-//const mg = mailgun({ apiKey: '1a7b89ba1d00ce38708846a9b3b293a9-7dcc6512-a5c50fc1', domain: DOMAIN });
+
 
 function UserService(UserModel){
     let service = {
         create,
         save,
         createToken,
-        //createTokenResetPassword,
         verifyToken,
         findUser,
         findEmail,
         findAll,
+        updateUser,
         createPassword,
         comparePassword
     };
@@ -199,6 +197,19 @@ function UserService(UserModel){
     function comparePassword(password, hash){
         return bcrypt.compare(password, hash);
     }
+
+
+    //update user reset password
+    function updateUser(user){
+        return new Promise(function (resolve, reject){
+
+            UserModel.findByIdAndUpdate({ _id: user._id }, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { new: true }).exec(function(err, new_user){
+                console.log(err, token, new_user)
+            });
+        })
+    }
+
+
 
     return service;
 }
