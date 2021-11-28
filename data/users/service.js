@@ -16,7 +16,8 @@ function UserService(UserModel){
         findEmail,
         findAll,
         createPassword,
-        comparePassword
+        comparePassword,
+        findByIdAndUpdate
     };
 
 
@@ -186,6 +187,19 @@ function UserService(UserModel){
             .sort('role') //ordenação crescente por role
             ;
         })
+    }
+
+    //
+    function findByIdAndUpdate(User_id, values){
+        return new Promise(function (resolve, reject) {
+            UserModel.findByIdAndUpdate(User_id, values , function (err, user) {
+
+                if(err) reject(err);
+
+                resolve(user);
+            });
+   
+        });
     }
         
 

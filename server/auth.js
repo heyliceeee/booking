@@ -356,23 +356,18 @@ function AuthRouter(){
             Users.findEmail({email})
                 .then (() => {
                     const token = crypto.randomBytes(20).toString('hex');
-
+                    
                     const now = new Date();
                     now.setHours(now.getHours() + 1);
+
+                    Users.findByIdAndUpdate(id, token, now)
                 })
 
                 .catch (() => {
                     res.status(400).send({ error: 'User not found'})
                 })
 
-                .then (() => {
-                    Users.findByIdAndUpdate(user.id, {
-                        '$set': {
-                            passwordResetToken: token,
-                            passwordResetExpires: now
-                        }
-                    })    
-                })
+            
 
             /*
             try {
