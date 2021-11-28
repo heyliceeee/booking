@@ -1,8 +1,6 @@
 const express = require('express');
 const Users = require('../data/users');
-const mailgun = require("mailgun-js");
 const DOMAIN = 'sandboxce44548564ea43bfa2ae1e646dea13d2.mailgun.org';
-const mg = mailgun({ apiKey: '1a7b89ba1d00ce38708846a9b3b293a9-7dcc6512-a5c50fc1', domain: DOMAIN });
 
 function AuthRouter(){
     let router = express();

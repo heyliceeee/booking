@@ -7,7 +7,7 @@ let UserSchema = new Schema({
     email: { type: String, required: true},
     password: { type: String, required: true},
     role : { type: String, default: "user", enum: ["user", "editor",  "admin"]},
-    //resetLink: { type: String, default: "" }
+    resetLink: { data: String, default: '' }
 });
 
 //the schema is useless so far
