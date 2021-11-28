@@ -1,8 +1,7 @@
 const express = require('express');
 const Users = require('../data/users');
-const mailgun = require("mailgun-js");
-const DOMAIN = 'sandboxce44548564ea43bfa2ae1e646dea13d2.mailgun.org';
-const mg = mailgun({ apiKey: '1a7b89ba1d00ce38708846a9b3b293a9-7dcc6512-a5c50fc1', domain: DOMAIN });
+const path = require('path');
+const { createToken, updateUser } = require('../data/users');
 
 function AuthRouter(){
     let router = express();
@@ -60,65 +59,47 @@ function AuthRouter(){
 
 
     //auth/admin/forgetpassword        
-    //router.route('/admin/forgetpassword')
-        //PUT - 
-        /* .put(function (req, res, next) {
-            console.log('---|ADMIN forget password|---');
+    router.route('/admin/forgetpassword')
+        //GET - 
+        .get(function (req, res, next) {
             
-            const email = req.body.email;
+            //open the browser
+            return res.sendFile(path.resolve('./public/forgotPassword.html'));
+        })
 
-            Users.findEmail( { email } )
+        //POST - 
+        .post(function (req, res, next) {
 
-                /* .catch((err) => {
-                    console.log('user with this email does not exists');
-                    console.log(err);
-                    res.status(400);
-                    next();
-                }) */
+           async.waterfall([
+               function(){
+                   Users.findEmail({
+                       email: req.body.email
 
-                /* .then((user) => Users.createTokenResetPassword(user))
+                   }).exec(function(err, user){
 
-                .then((rooms) => {
-                    console.log('save');
-                    res.send(rooms);
-                    next();
-                })
+                        if(user){
+                            console.log(err, user);
 
-                .catch((err) => {
-                    console.log('user with this email does not exists');
-                    console.log(err);
-                    res.status(400);
-                    next();
-                });
-        }); */
+                        } else {
+                            console.log('User not found');
+                        }
+                   });
+               },
+
+               createToken(user),
+
+               updateUser(user, token),
+
+
+           ])
+        });
 
 
     //auth/admin/resetpassword        
     router.route('/admin/resetpassword')
         //POST - 
         .post(function (req, res, next) {
-            console.log('---|create user|---');
             
-            const body = req.body;
-
-            console.log(body);
-
-            Users.create(body)
-                .then((user) => Users.createToken(user))
-
-                .then((response) => {
-                    console.log('save');
-                    res.status(200);
-                    res.send(response);
-                })
-
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    console.log(err);
-                    next();
-                });
         });    
 
 
