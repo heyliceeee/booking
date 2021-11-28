@@ -1,7 +1,5 @@
 const express = require('express');
 const Users = require('../data/users');
-const path = require('path');
-const { createToken, updateUser } = require('../data/users');
 
 function AuthRouter(){
     let router = express();
@@ -56,51 +54,6 @@ function AuthRouter(){
                     next();
                 });
         });
-
-
-    //auth/admin/forgetpassword        
-    router.route('/admin/forgetpassword')
-        //GET - 
-        .get(function (req, res, next) {
-            
-            //open the browser
-            return res.sendFile(path.resolve('./public/forgotPassword.html'));
-        })
-
-        //POST - 
-        .post(function (req, res, next) {
-
-           async.waterfall([
-               function(){
-                   Users.findEmail({
-                       email: req.body.email
-
-                   }).exec(function(err, user){
-
-                        if(user){
-                            console.log(err, user);
-
-                        } else {
-                            console.log('User not found');
-                        }
-                   });
-               },
-
-               createToken(user),
-
-               updateUser(user, token),
-
-
-           ])
-        });
-
-
-    //auth/admin/resetpassword        
-    router.route('/admin/resetpassword')
-        //POST - 
-        .post(function (req, res, next) {
-            
-        });    
 
 
     //auth/me

@@ -10,9 +10,7 @@ function UserService(UserModel){
         createToken,
         verifyToken,
         findUser,
-        findEmail,
         findAll,
-        updateUser,
         createPassword,
         comparePassword
     };
@@ -67,44 +65,6 @@ function UserService(UserModel){
     }
 
 
-    //criar token reset password
-    /* function createTokenResetPassword(user){
-
-        let token = jwt.sign({ id: user._id, role: user.role, name: user.name }, process.env.RESET_PASSWORD_KEY, config.secret, {
-            expiresIn: config.expiresPassword 
-        });
-
-        const data = {
-            from: 'noreply.tecourses@gmail.com',
-            to: { email: user.email },
-            subject: 'account reset password link',
-            html: `
-                <h2>please click on given link to reset your password</h2>
-                <p>${process.env.CLIENT_URL}/auth/resetpassword/${token}</p>
-            `
-        };
-
-        return user.updateOne( { resetLink: token }, function(err, success){
-
-            if(err){
-                console.log('reset password link error');
-                return res.status(400);
-            
-            } else {
-
-                mg.messages().send(data, function (err, body){
-
-                    if(err){
-                       return console.log(err);
-                    }
-
-                    return console.log("email has been sent, kindly follow instructions");
-                });
-            }
-        })
-    } */
-
-
     //verificar token
     function verifyToken(token){
         return new Promise((resolve, reject) => {
@@ -151,26 +111,6 @@ function UserService(UserModel){
     }
 
 
-    //procurar user pelo nome
-    function findEmail({ email }) {
-        return new Promise(function (resolve, reject) {
-
-        UserModel.findOne({ email }, function (err, user) {
-
-                if(err) reject(err);
-                //objeto de todos os users
-
-            
-                if(!user){
-                    reject("This data is wrong");
-                }
-
-                resolve(user);
-            });
-        })
-    }
-
-
     //procurar users
     function findAll(){
         return new Promise(function (resolve, reject){
@@ -197,18 +137,6 @@ function UserService(UserModel){
     function comparePassword(password, hash){
         return bcrypt.compare(password, hash);
     }
-
-
-    //update user reset password
-    function updateUser(user){
-        return new Promise(function (resolve, reject){
-
-            UserModel.findByIdAndUpdate({ _id: user._id }, { reset_password_token: token, reset_password_expires: Date.now() + 86400000 }, { new: true }).exec(function(err, new_user){
-                console.log(err, token, new_user)
-            });
-        })
-    }
-
 
 
     return service;
