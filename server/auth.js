@@ -1,5 +1,8 @@
 const express = require('express');
 const Users = require('../data/users');
+const mailgun = require("mailgun-js");
+const DOMAIN = 'sandboxce44548564ea43bfa2ae1e646dea13d2.mailgun.org';
+const mg = mailgun({ apiKey: '1a7b89ba1d00ce38708846a9b3b293a9-7dcc6512-a5c50fc1', domain: DOMAIN });
 
 function AuthRouter(){
     let router = express();
@@ -55,6 +58,68 @@ function AuthRouter(){
                 });
         });
 
+
+    //auth/admin/forgetpassword        
+    //router.route('/admin/forgetpassword')
+        //PUT - 
+        /* .put(function (req, res, next) {
+            console.log('---|ADMIN forget password|---');
+            
+            const email = req.body.email;
+
+            Users.findEmail( { email } )
+
+                /* .catch((err) => {
+                    console.log('user with this email does not exists');
+                    console.log(err);
+                    res.status(400);
+                    next();
+                }) */
+
+                /* .then((user) => Users.createTokenResetPassword(user))
+
+                .then((rooms) => {
+                    console.log('save');
+                    res.send(rooms);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('user with this email does not exists');
+                    console.log(err);
+                    res.status(400);
+                    next();
+                });
+        }); */
+
+
+    //auth/admin/resetpassword        
+    router.route('/admin/resetpassword')
+        //POST - 
+        .post(function (req, res, next) {
+            console.log('---|create user|---');
+            
+            const body = req.body;
+
+            console.log(body);
+
+            Users.create(body)
+                .then((user) => Users.createToken(user))
+
+                .then((response) => {
+                    console.log('save');
+                    res.status(200);
+                    res.send(response);
+                })
+
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    res.send(err);
+                    console.log(err);
+                    next();
+                });
+        });    
 
 
     //auth/me
