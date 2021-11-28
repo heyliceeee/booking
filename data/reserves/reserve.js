@@ -1,17 +1,18 @@
-//criar a lógica para armazenar os schemas dos rooms
+//criar a lógica para armazenar os schemas dos reserves
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-//criar uma schema
+//criar um schema
 let ReserveSchema = new Schema({
-    idUser : { type: Number, required: true },
-    idRoom : { type: Number, required: true},
-    checkinDate: { type: Date, required: true},
-    checkoutDate: { type: Date, required: false},
+    dateCheckIn: { type: Date, default: Date.now },
+    dateCheckOut: { type: Date },
+    idUser: { type: String, default: "" },
+    nameUser: { type: String, default: "" },
+    idRoom: { type: String, default: "" }
 });
 
 //criar um modelo para usar o schema
-let Reserve = mongoose.model('Reserve', RoomSchema);
+let Reserve = mongoose.model('Reserve', ReserveSchema);
 
-//tornar isto disponível para os nossos users nas nossas node apps
+//tornar isto disponível para os nossos users
 module.exports = Reserve;

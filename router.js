@@ -3,6 +3,7 @@
 const express = require('express');
 let RoomAPI = require('./server/rooms');
 let AuthAPI = require('./server/auth');
+let ReserveAPI = require('./server/reserves');
 
 function initialize(){
     
@@ -10,6 +11,7 @@ function initialize(){
 
     api.use('/hotel', RoomAPI());
     api.use('/auth', AuthAPI());
+    api.use('/reserve', ReserveAPI());
 
     return api;
 }

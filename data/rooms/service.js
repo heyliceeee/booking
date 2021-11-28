@@ -1,5 +1,7 @@
 //vai devolver sempre as ações q podemos fazer na BD
 
+const Room = require("./room");
+
 function RoomService(RoomModel){
     let service = {
         create,
@@ -31,16 +33,27 @@ function RoomService(RoomModel){
     }
 
     //procurar room
-    function findAll(){
+    function findAll(pageNumber, nPerPage){
         return new Promise(function (resolve, reject){
 
+            let intPageNumber = parseInt(pageNumber);
+            let intNPerPage = parseInt(nPerPage);
+
+            console.log("page: " + intPageNumber);
+            console.log("nPerPage: " + intNPerPage);
+
             RoomModel.find({}, function (err, users) {
+
                 if (err) reject(err);
 
-                //objecto de todos os users
-                resolve(users);
-            });
-        }).sort(price);
+                    //objecto de todos os users
+                    resolve(users);
+                })
+
+                .sort('price') //ordenação crescente por price
+                .skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
+                .limit(intNPerPage);
+        })
     }
 
     //procurar room por id
@@ -56,16 +69,26 @@ function RoomService(RoomModel){
     }
 
     //procurar room por description (full search)
-    function findByDescription(description){
+    function findByDescription(description, pageNumber, nPerPage){
         return new Promise(function (resolve, reject){
+
+            let intPageNumber = parseInt(pageNumber);
+            let intNPerPage = parseInt(nPerPage);
+
+            console.log("page: " + intPageNumber);
+            console.log("nPerPage: " + intNPerPage);
 
             RoomModel.find({description: new RegExp(description)}, function (err, users) {
                 if (err) reject(err);
 
                 //objecto de todos os users
                 resolve(users);
-            });
-        });
+            })
+            
+            .sort('price') //ordenação crescente por price
+            .skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
+            .limit(intNPerPage);
+        })
     }
 
     //atualizar room
