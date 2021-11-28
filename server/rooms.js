@@ -1091,9 +1091,9 @@ router.route('/rooms')
                 })
 
 
-                router.route('/rooms/:description')
-                //GET - findByDescription room
-                .get(function (req, res, next) {
+        router.route('/rooms/:description')
+            //GET - findByDescription room
+            .get(function (req, res, next) {
                     
                     let description = req.params['description'];
                     let pageNumber = req.headers['page'];
@@ -1115,7 +1115,7 @@ router.route('/rooms')
                             res.status(404);
                             next();
                         });
-                })
+            })
 
     return router;
 }

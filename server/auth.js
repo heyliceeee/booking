@@ -1,5 +1,6 @@
 const express = require('express');
 const Users = require('../data/users');
+const crypto = require('crypto');
 
 function AuthRouter(){
     let router = express();
@@ -54,8 +55,6 @@ function AuthRouter(){
                     next();
                 });
         });
-
-
 
     //auth/me
     router.route('/me')
@@ -350,7 +349,67 @@ function AuthRouter(){
                 });
         });
 
+    router.route('/forgot_password')
+        .post(function(req, res, next) {
+            const {email}  = req.body;
 
+            Users.findEmail({email})
+                .then (() => {
+                    const token = crypto.randomBytes(20).toString('hex');
+                    
+                    const now = new Date();
+                    now.setHours(now.getHours() + 1);
+
+                    Users.findByIdAndUpdate(id, token, now)
+                        .then(() => {
+                            console.log("passou aqui")
+                        }) 
+                        .catch(()=> {
+                            res.status(400).send({ error: 'User Update Error'})
+                        })
+                    
+                    
+                })
+
+                .catch (() => {
+                    res.status(400).send({ error: 'User not found'})
+                })
+
+                
+            
+
+            /*
+            try {
+                //console.log("passou aqui!"); -> leu
+                const user = Users.findEmail ({email}); // <-- Problema
+                 console.log("passou aqui!"); //<-- Não Leu
+                 console.log(user);
+
+                if(!user) {
+                    return res.status(400).send({ error: 'User not found'})
+                }
+                const token = crypto.randomBytes(20).toString('hex');
+
+                const now = new Date();
+                now.setHours(now.getHours() + 1);
+
+                 User.findByIdAndUpdate(user.id, {
+                    '$set': {
+                        passwordResetToken: token,
+                        passwordResetExpires: now
+                    }
+                })
+
+                console.log(token, now);
+
+
+            } catch (err) {
+                res.status(400).send({ error: 'Error on Forgot Password, please try again'})
+            }
+            */
+
+
+        })
 
         return router;
 }
