@@ -361,12 +361,21 @@ function AuthRouter(){
                     now.setHours(now.getHours() + 1);
 
                     Users.findByIdAndUpdate(id, token, now)
+                        .then(() => {
+                            console.log("passou aqui")
+                        }) 
+                        .catch(()=> {
+                            res.status(400).send({ error: 'User Update Error'})
+                        })
+                    
+                    
                 })
 
                 .catch (() => {
                     res.status(400).send({ error: 'User not found'})
                 })
 
+                
             
 
             /*
