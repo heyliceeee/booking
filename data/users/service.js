@@ -109,6 +109,7 @@ function UserService(UserModel){
         })
     }
 
+
     //procurar users
     function findAll(){
         return new Promise(function (resolve, reject){
@@ -124,7 +125,6 @@ function UserService(UserModel){
         })
     }
         
-
 
     //criar password encriptada
     function createPassword(user){

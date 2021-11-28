@@ -976,12 +976,12 @@ router.route('/user/rooms')
                 .get(function (req, res, next) {
     
                     let role = "user";
-    
                     let description = req.params['description'];
                     let token = req.headers['x-access-token'];
                     let pageNumber = req.headers['page'];
                     let nPerPage = req.headers['limit'];
     
+                    
                     if(!token) {
     
                         return res.status(401).send({ auth: false, message: 'No token provided.' })

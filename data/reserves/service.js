@@ -36,8 +36,14 @@ function ReserveService(ReserveModel){
 
 
     //procurar reserve
-    function findAll(){
+    function findAll(pageNumber, nPerPage){
         return new Promise(function (resolve, reject){
+
+            let intPageNumber = parseInt(pageNumber);
+            let intNPerPage = parseInt(nPerPage);
+
+            console.log("page: " + intPageNumber);
+            console.log("nPerPage: " + intNPerPage);
 
             ReserveModel.find({}, function (err, users){
 
@@ -45,7 +51,10 @@ function ReserveService(ReserveModel){
 
                 //objecto de todos os users
                 resolve(users);
-            });
+            })
+            .sort('dateCheckIn') //ordenação crescente por date CheckIn
+            .skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
+            .limit(intNPerPage);
         });
     }
 
@@ -65,15 +74,24 @@ function ReserveService(ReserveModel){
 
 
     //procurar reserve por user id
-    function findByUserId(idUser){
+    function findByUserId(idUser, pageNumber, nPerPage){
         return new Promise(function (resolve, reject){
+
+            let intPageNumber = parseInt(pageNumber);
+            let intNPerPage = parseInt(nPerPage);
+
+            console.log("page: " + intPageNumber);
+            console.log("nPerPage: " + intNPerPage);
 
             ReserveModel.find({ idUser: idUser}, function (err, user){
 
                 if(err) reject(err);
 
                 resolve(user);
-            });
+            })
+            .sort('dateCheckIn') //ordenação crescente por date Check In
+            .skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
+            .limit(intNPerPage);
         });
     }
 

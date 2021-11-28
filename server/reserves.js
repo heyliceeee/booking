@@ -38,6 +38,8 @@ function ReserveRouter(){
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
             let role = "admin"
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
 
 
             if(!token){
@@ -57,7 +59,7 @@ function ReserveRouter(){
 
                     } else {
 
-                        Reserves.findAll()
+                        Reserves.findAll(pageNumber, nPerPage)
                             .then((reserves) => {
 
                                 console.log('---|ADMIN all reserves|---'); //retorna todos os reserves
@@ -81,6 +83,60 @@ function ReserveRouter(){
                 });
         })
 
+    
+    router.route('/admin/reserves/:userId')
+        //GET - findAll reserves
+        .get(function (req, res, next){
+
+            console.log('---|verify token|---');
+            let idUser = req.params['userId'];
+            let token = req.headers['x-access-token'];
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
+            let role = "admin"
+
+
+            if(!token){
+                return res.status(401).send({ auth: false, message: 'No token provided.' })
+            }
+
+            return Users.verifyToken(token)
+                .then((decoded) => {
+
+                    console.log({ auth: true, decoded });
+
+                    if(decoded.role != role){
+
+                        console.log("---|unauthorized user|---");
+                        res.status(500);
+                        next();
+
+                    } else {
+
+                        Reserves.findByUserId(idUser, pageNumber, nPerPage)
+                            .then((reserves) => {
+
+                                console.log('---|ADMIN all reserves|---'); //retorna todos os reserves
+                                res.send(reserves);
+                                next();
+                            })
+
+                            .catch((err) => {
+                                console.log('"---|ADMIN error|---"');
+                                console.log(err);
+                                next();
+                            });
+                    }
+                })
+
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    console.log(err);
+                    next();
+                });
+        })    
+        
         
     router.route('/admin/reserves/:roomId')
         //POST - create reserves
@@ -312,6 +368,8 @@ function ReserveRouter(){
             console.log('---|verify token|---');
             let token = req.headers['x-access-token'];
             let role = "editor"
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
 
 
             if(!token){
@@ -331,7 +389,7 @@ function ReserveRouter(){
 
                     } else {
 
-                        Reserves.findAll()
+                        Reserves.findAll(pageNumber, nPerPage)
                             .then((reserves) => {
 
                                 console.log('---|EDITOR all reserves|---'); //retorna todos os reserves
@@ -586,6 +644,8 @@ function ReserveRouter(){
             console.log('---|verify token|---');
             let idUser = req.params['userId'];
             let token = req.headers['x-access-token'];
+            let pageNumber = req.headers['page'];
+            let nPerPage = req.headers['limit'];
             let role = "user"
 
 
@@ -606,7 +666,7 @@ function ReserveRouter(){
 
                     } else {
 
-                        Reserves.findByUserId(idUser)
+                        Reserves.findByUserId(idUser, pageNumber, nPerPage)
                             .then((reserves) => {
 
                                 console.log('---|USER all reserves|---'); //retorna todos os reserves
@@ -615,7 +675,7 @@ function ReserveRouter(){
                             })
 
                             .catch((err) => {
-                                console.log('"---|EDITOR error|---"');
+                                console.log('"---|USER error|---"');
                                 console.log(err);
                                 next();
                             });
@@ -796,32 +856,6 @@ function ReserveRouter(){
                     next();
                 });
         })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
