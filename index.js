@@ -15,7 +15,7 @@ const server = http.Server(app);
 
 
 //config.js e mongoose
-let config = require('./configs/config');
+let config = require('./config');
 var mongoose = require('mongoose');
 mongoose.connect(config.db);
 

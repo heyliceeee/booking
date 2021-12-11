@@ -1,23 +1,17 @@
-const config = require("../../configs/config");
+const config = require("../../config");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-//const mailgun = require("mailgun-js");
-//const DOMAIN = 'sandboxce44548564ea43bfa2ae1e646dea13d2.mailgun.org';
-//const mg = mailgun({ apiKey: '1a7b89ba1d00ce38708846a9b3b293a9-7dcc6512-a5c50fc1', domain: DOMAIN });
 
 function UserService(UserModel){
     let service = {
         create,
         save,
         createToken,
-        //createTokenResetPassword,
         verifyToken,
         findUser,
-        findEmail,
         findAll,
         createPassword,
-        comparePassword,
-        findByIdAndUpdate
+        comparePassword
     };
 
 
@@ -70,44 +64,6 @@ function UserService(UserModel){
     }
 
 
-    //criar token reset password
-    /* function createTokenResetPassword(user){
-
-        let token = jwt.sign({ id: user._id, role: user.role, name: user.name }, process.env.RESET_PASSWORD_KEY, config.secret, {
-            expiresIn: config.expiresPassword 
-        });
-
-        const data = {
-            from: 'noreply.tecourses@gmail.com',
-            to: { email: user.email },
-            subject: 'account reset password link',
-            html: `
-                <h2>please click on given link to reset your password</h2>
-                <p>${process.env.CLIENT_URL}/auth/resetpassword/${token}</p>
-            `
-        };
-
-        return user.updateOne( { resetLink: token }, function(err, success){
-
-            if(err){
-                console.log('reset password link error');
-                return res.status(400);
-            
-            } else {
-
-                mg.messages().send(data, function (err, body){
-
-                    if(err){
-                       return console.log(err);
-                    }
-
-                    return console.log("email has been sent, kindly follow instructions");
-                });
-            }
-        })
-    } */
-
-
     //verificar token
     function verifyToken(token){
         return new Promise((resolve, reject) => {
@@ -154,26 +110,6 @@ function UserService(UserModel){
     }
 
 
-    //procurar user pelo nome
-    function findEmail({ email }) {
-        return new Promise(function (resolve, reject) {
-
-        UserModel.findOne({ email }, function (err, user) {
-
-                if(err) reject(err);
-                //objeto de todos os users
-
-            
-                if(!user){
-                    reject("This data is wrong");
-                }
-
-                resolve(user);
-            });
-        })
-    }
-
-
     //procurar users
     function findAll(){
         return new Promise(function (resolve, reject){
@@ -187,19 +123,6 @@ function UserService(UserModel){
             .sort('role') //ordenação crescente por role
             ;
         })
-    }
-
-    //
-    function findByIdAndUpdate(User_id, values){
-        return new Promise(function (resolve, reject) {
-            UserModel.findByIdAndUpdate(User_id, values , function (err, user) {
-
-                if(err) reject(err);
-
-                resolve(user);
-            });
-   
-        });
     }
         
 
