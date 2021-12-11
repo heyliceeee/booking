@@ -1,7 +1,6 @@
 module.exports = {
     //USER
     'read-own-reserves': 'read-own-reserves',
-    'update-own-reserve': 'update-own-reserve',
 
     //EDITOR
 
@@ -28,7 +27,6 @@ module.exports = {
 /* 
 GET /reserve/user/reserves/:userId -> 'read-own-reserves'
 POST /reserve/reserves/:roomId -> 'create-reserve'
-PUT /reserve/user/reserves/:reserveId -> 'update-own-reserve'
 PUT /reserve/reserves/:reserveId -> 'update-reserve'
 GET /reserve/reserves -> 'read-reserves'
 GET /reserve/reserves/:reserveId -> 'detail-reserve'
