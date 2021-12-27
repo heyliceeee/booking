@@ -2,7 +2,7 @@ const config = require("../../config");
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-function UserService(UserModel){
+function UserService(UserModel) {
     let service = {
         create,
         save,
@@ -17,10 +17,10 @@ function UserService(UserModel){
 
 
     //criar user
-    function create(user){
+    function create(user) {
         return createPassword(user)
             .then((hashPassword, err) => {
-                if(err){
+                if (err) {
                     return Promise.reject("Not saved");
                 }
 
@@ -36,8 +36,8 @@ function UserService(UserModel){
 
 
     //guardar user
-    function save(newUser){
-        return new Promise(function (resolve, reject){
+    function save(newUser) {
+        return new Promise(function (resolve, reject) {
 
             //guardar
             newUser.save(function (err) {
@@ -50,12 +50,12 @@ function UserService(UserModel){
 
 
     //criar token
-    function createToken(user){
+    function createToken(user) {
 
         console.log(user);
 
         let token = jwt.sign({ id: user._id, role: user.role.scopes, name: user.name }, config.secret, {
-            expiresIn: config.expiresPassword 
+            expiresIn: config.expiresPassword
         });
 
         return { auth: true, token }
@@ -63,12 +63,12 @@ function UserService(UserModel){
 
 
     //verificar token
-    function verifyToken(token){
+    function verifyToken(token) {
         return new Promise((resolve, reject) => {
-            
+
             jwt.verify(token, config.secret, (err, decoded) => {
 
-                if(err){
+                if (err) {
 
                     reject();
                 }
@@ -83,71 +83,88 @@ function UserService(UserModel){
     function findUser({ name, password, role }) {
         return new Promise(function (resolve, reject) {
 
-        UserModel.findOne({ name }, function (err, user) {
+            UserModel.findOne({ name }, function (err, user) {
 
-                if(err) reject(err);
+                if (err) reject(err);
                 //objeto de todos os users
 
-            
-                if(!user){
+
+                if (!user) {
                     reject("This data is wrong");
                 }
 
                 resolve(user);
             });
         })
-        .then((user) => {
-            return comparePassword(password, user.password)
-                .then((match) => {
-                    
-                    if(!match) return Promise.reject("User not valid");
+            .then((user) => {
+                return comparePassword(password, user.password)
+                    .then((match) => {
 
-                    return Promise.resolve(user);
-                })
-        })
+                        if (!match) return Promise.reject("User not valid");
+
+                        return Promise.resolve(user);
+                    })
+            })
     }
 
 
     //procurar users
-    function findAll(){
-        return new Promise(function (resolve, reject){
+    function findAll(pagination) {
 
-            UserModel.find({}, function (err, users) {
+        const { limit, skip } = pagination;
+
+        return new Promise(function (resolve, reject) {
+
+            UserModel.find({}, {}, { skip, limit }, function (err, users) {
                 if (err) reject(err);
 
                 //objecto de todos os users
                 resolve(users);
-            })
-            .sort('role') //ordenação crescente por role
-            ;
+            });
+            //.sort('role') //ordenação crescente por role
+            //;
         })
+
+            .then(async (users) => {
+                const totalUsers = await UserModel.count();
+
+                return Promise.resolve({
+                    users: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
     }
-        
+
 
     //criar password encriptada
-    function createPassword(user){
+    function createPassword(user) {
         return bcrypt.hash(user.password, config.saltRounds);
     }
 
 
     //comparar password encriptada com a original (???)
-    function comparePassword(password, hash){
+    function comparePassword(password, hash) {
         return bcrypt.compare(password, hash);
     }
 
 
     //autorizar se aquele scope pode ter acesso aquela route
-    function autorize(scopes){
+    function autorize(scopes) {
 
         return (req, res, next) => {
             const { roleUser } = req;
             const hasAutorization = scopes.some(scope => roleUser.includes(scope));
 
-            if(roleUser && hasAutorization){
+            if (roleUser && hasAutorization) {
                 next();
 
             } else {
-                res.status(403).json({message: 'forbidden'});
+                res.status(403).json({ message: 'forbidden' });
             }
         }
     }

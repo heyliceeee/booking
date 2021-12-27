@@ -27,6 +27,7 @@ let Tags = new Schema({
 
 //criar uma schema
 let RoomSchema = new Schema({
+    image: { type: String, required: false },
     description: { type: String, required: false },
     nAdult: { type: Number, required: false },
     nChild: { type: Number, required: false },
