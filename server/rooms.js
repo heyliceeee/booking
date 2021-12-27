@@ -3,6 +3,7 @@ const Rooms = require('../data/rooms');
 const Users = require('../data/users');
 const scopes = require('../data/users/scopes');
 const User = require('../data/users/user');
+const pagination = require('../middleware/pagination');
 
 function RoomRouter() {
 
@@ -48,6 +49,8 @@ function RoomRouter() {
                 res.status(401).send({ auth: false, message: 'not authorized' })
             })
     });
+
+    router.use(pagination);
     //fim camadas    
 
 
@@ -148,13 +151,17 @@ function RoomRouter() {
         //GET - findAll rooms
         .get(function (req, res, next) {
 
-            let pageNumber = req.headers['page'];
-            let nPerPage = req.headers['limit'];
+            //let pageNumber = req.headers['page'];
+            //let nPerPage = req.headers['limit'];
 
-            Rooms.findAll(pageNumber, nPerPage)
-                .then((rooms) => {
+            Rooms.findAll(req.pagination)
+                //Rooms.findAll(pageNumber, nPerPage)
+                .then((responseServer) => {
                     console.log('---|all rooms|---'); //retorna todos os rooms
-                    res.send(rooms);
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
                     next();
                 })
 
