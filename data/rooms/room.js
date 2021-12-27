@@ -3,16 +3,16 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let Tags = new Schema({
-    typeRoom: { type: String, required: true },
-    vip: { type: Boolean, required: false, default: false},
-    nPool: { type: Number, required: false, default: 0},
-    carPark: { type: Boolean, required: false, default: false},
-    breakfast: { type: Boolean, required: false, default: false},
-    lunch: { type: Boolean, required: false, default: false},
-    spa: { type: Boolean, required: false, default: false},
-    nStars: { type: Number, required: true, default: 0},
-    nSingleBed: { type: Number, required: true, default: 0},
-    nDoubleBed: { type: Number, required: true, default: 0}
+    typeRoom: { type: String, required: false },
+    vip: { type: Boolean, required: false, default: false },
+    nPool: { type: Number, required: false, default: 0 },
+    carPark: { type: Boolean, required: false, default: false },
+    breakfast: { type: Boolean, required: false, default: false },
+    lunch: { type: Boolean, required: false, default: false },
+    spa: { type: Boolean, required: false, default: false },
+    nStars: { type: String, required: false, default: 0 },
+    nSingleBed: { type: Number, required: false, default: 0 },
+    nDoubleBed: { type: Number, required: false, default: 0 }
 });
 
 /*
@@ -27,11 +27,11 @@ let Tags = new Schema({
 
 //criar uma schema
 let RoomSchema = new Schema({
-    description: { type: String, required: true},
-    nAdult: { type: Number, required: true },
-    nChild: { type: Number, required: true },
-    nRoom: { type: Number, required: true },
-    price: { type: Number, required: true, currency: "EUR" },
+    description: { type: String, required: false },
+    nAdult: { type: Number, required: false },
+    nChild: { type: Number, required: false },
+    nRoom: { type: Number, required: false },
+    price: { type: Number, required: false, currency: "EUR" },
     tags: [{ type: Tags }]
 });
 
