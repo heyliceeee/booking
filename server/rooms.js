@@ -87,6 +87,27 @@ function RoomRouter() {
         });
 
 
+    router.route('/upload')
+        //POST - create image room
+        .post(Users.autorize([scopes['create-room']]), function (req, res, next) {
+
+            let uploadFile = req.files.file
+            const fileName = req.files.file.name
+
+            uploadFile.mv(
+                `${__dirname}/public/files/${fileName}`,
+
+                function (err) {
+                    if (err) {
+                        return res.status(500).send(err)
+                    }
+
+                    res.json({ file: `public/${req.files.file.name}`, })
+                },
+            )
+        })
+
+
     router.route('/rooms/:roomId')
         //PUT - update room by ID
         .put(Users.autorize([scopes['update-room']]), function (req, res, next) {
