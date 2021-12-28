@@ -3,34 +3,37 @@ const Reserves = require('../data/reserves');
 const Rooms = require('../data/rooms');
 const Users = require('../data/users');
 const scopes = require('../data/users/scopes');
+const pagination = require('../middleware/pagination');
 
-function ReserveRouter(){
+function ReserveRouter() {
 
     let router = express();
 
 
     //camadas
-    router.use(express.json({ 
-        limit: '100mb' }
+    router.use(express.json({
+        limit: '100mb'
+    }
     ));
 
-    router.use(express.urlencoded({ 
-        limit: '100mb', extended: true }
+    router.use(express.urlencoded({
+        limit: '100mb', extended: true
+    }
     ));
 
     router.use(function (req, res, next) {
-        var today = new Date(); 
+        var today = new Date();
 
         console.log('Time:', today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds());
         next();
     });
 
-    router.use(function (req, res, next){
-        
+    router.use(function (req, res, next) {
+
         let token = req.headers['x-access-token'];
 
 
-        if(!token){
+        if (!token) {
             return res.status(401).send({ auth: false, message: 'no token provided.' })
         }
 
@@ -46,42 +49,51 @@ function ReserveRouter(){
                 res.status(401).send({ auth: false, message: 'not authorized' })
             })
     });
+
+    router.use(pagination);
     //fim camadas
 
 
 
-//-------------------------------------------------------------------------------------------//
-//------------------------------------ADMIN EDITOR ROUTES------------------------------------//
-//------------------------------------------------------------------------------------------//
+    //-------------------------------------------------------------------------------------------//
+    //------------------------------------ADMIN EDITOR ROUTES------------------------------------//
+    //------------------------------------------------------------------------------------------//
 
     router.route('/reserves')
         //GET - findAll reserves
-        .get(Users.autorize([ scopes['read-reserves'] ]), function (req, res, next){
+        .get(Users.autorize([scopes['read-reserves']]), function (req, res, next) {
 
             console.log('---|verify token|---');
-            let pageNumber = req.headers['page'];
-            let nPerPage = req.headers['limit'];
+            //let pageNumber = req.headers['page'];
+            //let nPerPage = req.headers['limit'];
 
 
-            Reserves.findAll(pageNumber, nPerPage)
-                            .then((reserves) => {
+            Reserves.findAll(req.pagination)
+                .then((responseServer) => {
 
-                                console.log('---|all reserves|---'); //retorna todos os reserves
-                                res.send(reserves);
-                                next();
-                            })
+                    console.log('---|all reserves|---'); //retorna todos os reserves
 
-                            .catch((err) => {
-                                console.log('---|error|---');
-                                console.log(err);
-                                next();
-                            });
+                    const response = {
+
+                        auth: true,
+                        ...responseServer
+                    };
+
+                    res.send(response);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    console.log(err);
+                    next();
+                });
         });
 
-    
+
     router.route('/reserves/:userId')
         //GET - findAll reserves
-        .get(Users.autorize([ scopes['read-reserve-client'] ]),function (req, res, next){
+        .get(Users.autorize([scopes['read-reserve-client']]), function (req, res, next) {
 
             let idUser = req.params['userId'];
             let pageNumber = req.headers['page'];
@@ -101,12 +113,12 @@ function ReserveRouter(){
                     console.log(err);
                     next();
                 });
-        })     
+        })
 
 
-    router.route('/reserves/:reserveId')    
+    router.route('/reserves/:reserveId')
         //PUT - update reserve by ID
-        .put(Users.autorize([ scopes['update-reserve'] ]), function (req, res, next) {
+        .put(Users.autorize([scopes['update-reserve']]), function (req, res, next) {
 
             let reserveId = req.params['reserveId'];
             let body = req.body;
@@ -120,15 +132,15 @@ function ReserveRouter(){
                     next();
                 })
 
-                        .catch((err) => {
-                            console.log('---|error|---');
-                            res.status(404);
-                            next();
-                        });
+                .catch((err) => {
+                    console.log('---|error|---');
+                    res.status(404);
+                    next();
+                });
         })
 
         //DELETE - delete room by ID
-        .delete(Users.autorize([ scopes['delete-reserve'] ]),function (req, res, next) {
+        .delete(Users.autorize([scopes['delete-reserve']]), function (req, res, next) {
 
             let reserveId = req.params['reserveId'];
 
@@ -149,13 +161,13 @@ function ReserveRouter(){
 
 
 
-//--------------------------------------------------------------------------------------//
-//------------------------------------ADMIN EDTIOR USER ROUTES-------------------------//
-//------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------//
+    //------------------------------------ADMIN EDTIOR USER ROUTES-------------------------//
+    //------------------------------------------------------------------------------------//
 
     router.route('/reserves/:roomId')
         //POST - create reserves
-        .post(Users.autorize([ scopes['create-reserve'] ]), function (req, res, next){
+        .post(Users.autorize([scopes['create-reserve']]), function (req, res, next) {
 
             console.log('---|create reserve|---');
 
@@ -165,25 +177,25 @@ function ReserveRouter(){
             Rooms.findById(roomId)
                 .then(() => Reserves.create(body))
 
-                    .then(() => {
-                        console.log('save');
-                        res.status(200);
-                        res.send(body);
-                        next();
-                    })
+                .then(() => {
+                    console.log('save');
+                    res.status(200);
+                    res.send(body);
+                    next();
+                })
 
-                    .catch((err) => {
-                        console.log('---|error|---');
-                        err.status = err.status || 500;
-                        res.status(401);
-                        next();
-                    });
-        });    
+                .catch((err) => {
+                    console.log('---|error|---');
+                    err.status = err.status || 500;
+                    res.status(401);
+                    next();
+                });
+        });
 
 
-    router.route('/reserves/:reserveId')    
+    router.route('/reserves/:reserveId')
         //GET - findById reserve
-        .get(Users.autorize([ scopes['detail-reserve'] ]), function (req, res, next) {
+        .get(Users.autorize([scopes['detail-reserve']]), function (req, res, next) {
 
             let reserveId = req.params['reserveId'];
 
@@ -206,14 +218,14 @@ function ReserveRouter(){
 
 
 
-//------------------------------------------------------------------------------------//
-//------------------------------------USER ROUTES------------------------------------//
-//----------------------------------------------------------------------------------//
+    //------------------------------------------------------------------------------------//
+    //------------------------------------USER ROUTES------------------------------------//
+    //----------------------------------------------------------------------------------//
 
 
     router.route('/user/reserves/:userId')
         //GET - findAll reserves
-        .get(Users.autorize([ scopes['read-own-reserves'] ]), function (req, res, next){
+        .get(Users.autorize([scopes['read-own-reserves']]), function (req, res, next) {
 
             console.log('---|verify token|---');
             let idUser = req.params['userId'];
