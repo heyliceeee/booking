@@ -113,19 +113,30 @@ function UserService(UserModel) {
 
         const { limit, skip } = pagination;
 
+        //function findAll(pageNumber, nPerPage){
         return new Promise(function (resolve, reject) {
 
+            //let intPageNumber = parseInt(pageNumber);
+            //let intNPerPage = parseInt(nPerPage);
+
+            //console.log("page: " + intPageNumber);
+            //console.log("nPerPage: " + intNPerPage);
+
             UserModel.find({}, {}, { skip, limit }, function (err, users) {
+
                 if (err) reject(err);
 
                 //objecto de todos os users
                 resolve(users);
             });
-            //.sort('role') //ordenação crescente por role
-            //;
+
+            //.sort('price') //ordenação crescente por price
+            //.skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
+            //.limit(intNPerPage);
         })
 
             .then(async (users) => {
+
                 const totalUsers = await UserModel.count();
 
                 return Promise.resolve({
