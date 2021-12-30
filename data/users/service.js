@@ -113,15 +113,7 @@ function UserService(UserModel) {
 
         const { limit, skip } = pagination;
 
-        //function findAll(pageNumber, nPerPage){
         return new Promise(function (resolve, reject) {
-
-            //let intPageNumber = parseInt(pageNumber);
-            //let intNPerPage = parseInt(nPerPage);
-
-            //console.log("page: " + intPageNumber);
-            //console.log("nPerPage: " + intNPerPage);
-
             UserModel.find({}, {}, { skip, limit }, function (err, users) {
 
                 if (err) reject(err);
@@ -129,10 +121,6 @@ function UserService(UserModel) {
                 //objecto de todos os users
                 resolve(users);
             });
-
-            //.sort('price') //ordenação crescente por price
-            //.skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
-            //.limit(intNPerPage);
         })
 
             .then(async (users) => {

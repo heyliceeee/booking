@@ -25,6 +25,28 @@ function AuthRouter() {
         next();
     });
 
+    router.use(function (req, res, next) {
+
+        let token = req.headers['x-access-token'];
+
+
+        if (!token) {
+            return res.status(401).send({ auth: false, message: 'no token provided.' })
+        }
+
+
+        Users.verifyToken(token)
+            .then((decoded) => {
+
+                req.roleUser = decoded.role;
+                next();
+            })
+
+            .catch(() => {
+                res.status(401).send({ auth: false, message: 'not authorized' })
+            })
+    });
+
     router.use(pagination);
     //fim camadas
 
