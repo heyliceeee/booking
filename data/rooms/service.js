@@ -37,14 +37,7 @@ function RoomService(RoomModel) {
 
         const { limit, skip } = pagination;
 
-        //function findAll(pageNumber, nPerPage){
         return new Promise(function (resolve, reject) {
-
-            //let intPageNumber = parseInt(pageNumber);
-            //let intNPerPage = parseInt(nPerPage);
-
-            //console.log("page: " + intPageNumber);
-            //console.log("nPerPage: " + intNPerPage);
 
             RoomModel.find({}, {}, { skip, limit }, function (err, users) {
 
@@ -53,10 +46,6 @@ function RoomService(RoomModel) {
                 //objecto de todos os users
                 resolve(users);
             });
-
-            //.sort('price') //ordenação crescente por price
-            //.skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
-            //.limit(intNPerPage);
         })
 
             .then(async (users) => {
@@ -76,15 +65,35 @@ function RoomService(RoomModel) {
     }
 
     //procurar room por id
-    function findById(id) {
+    function findById(id, pagination) {
+
+        const { limit, skip } = pagination;
+
         return new Promise(function (resolve, reject) {
-            RoomModel.findById(id, function (err, user) {
+
+            RoomModel.findById(id, {}, { skip, limit }, function (err, user) {
+
                 if (err) reject(err);
 
                 //objecto de todos os users
                 resolve(user);
             });
-        });
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await RoomModel.count();
+
+                return Promise.resolve({
+                    rooms: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
     }
 
     //procurar room por description (full search)

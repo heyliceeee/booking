@@ -151,11 +151,7 @@ function RoomRouter() {
         //GET - findAll rooms
         .get(function (req, res, next) {
 
-            //let pageNumber = req.headers['page'];
-            //let nPerPage = req.headers['limit'];
-
             Rooms.findAll(req.pagination)
-                //Rooms.findAll(pageNumber, nPerPage)
                 .then((responseServer) => {
                     console.log('---|all rooms|---'); //retorna todos os rooms
 
@@ -177,11 +173,13 @@ function RoomRouter() {
         .get(function (req, res, next) {
             let roomId = req.params['roomId'];
 
-            Rooms.findById(roomId)
-                .then((room) => {
+            Rooms.findById(roomId, req.pagination)
+                .then((responseServer) => {
                     console.log('---| find one room by ID|---'); //retorna o room pelo Id
-                    res.status(200);
-                    res.send(room);
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
                     next();
                 })
 

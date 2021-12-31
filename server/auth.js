@@ -25,28 +25,6 @@ function AuthRouter() {
         next();
     });
 
-    router.use(function (req, res, next) {
-
-        let token = req.headers['x-access-token'];
-
-
-        if (!token) {
-            return res.status(401).send({ auth: false, message: 'no token provided.' })
-        }
-
-
-        Users.verifyToken(token)
-            .then((decoded) => {
-
-                req.roleUser = decoded.role;
-                next();
-            })
-
-            .catch(() => {
-                res.status(401).send({ auth: false, message: 'not authorized' })
-            })
-    });
-
     router.use(pagination);
     //fim camadas
 
@@ -84,33 +62,6 @@ function AuthRouter() {
                 });
         });
 
-    //auth/me
-    router.route('/me')
-        //GET - verify token
-        .get(function (req, res, next) {
-            console.log('---|verify token|---');
-            let token = req.headers['x-access-token'];
-
-            if (!token) {
-
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
-
-            return Users.verifyToken(token)
-                .then((decoded) => {
-
-                    res.status(202).send({ auth: true, decoded });
-                })
-
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    next();
-                });
-        });
-
-
 
     //auth/login
     router.route('/admin/login')
@@ -135,31 +86,6 @@ function AuthRouter() {
                 .catch((err) => {
                     console.log("error");
                     res.status(500);
-                    console.log(err);
-                    next();
-                });
-        });
-
-
-
-
-
-    router.route('/admin/users')
-        //GET - verify token
-        .get(Users.autorize([scopes['read-users']]), function (req, res, next) {
-
-            Users.findAll(req.pagination)
-                .then((responseServer) => {
-                    console.log('---|ADMIN all users|---'); //retorna todos os rooms
-
-                    const response = { auth: true, ...responseServer };
-
-                    res.send(response);
-                    next();
-                })
-
-                .catch((err) => {
-                    console.log('"---|ADMIN error|---"');
                     console.log(err);
                     next();
                 });
@@ -198,36 +124,6 @@ function AuthRouter() {
                     next();
                 });
         });
-
-
-
-    //auth/me
-    router.route('/me')
-        //GET - verify token
-        .get(function (req, res, next) {
-            console.log('---|verify token|---');
-            let token = req.headers['x-access-token'];
-            let role = user.role;
-
-            if (!token) {
-
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
-
-            return Users.verifyToken(token)
-                .then((decoded) => {
-
-                    res.status(202).send({ role, auth: true, decoded });
-                })
-
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    next();
-                });
-        });
-
 
 
     //auth/login
@@ -294,35 +190,6 @@ function AuthRouter() {
         });
 
 
-
-    //auth/me
-    router.route('/me')
-        //GET - verify token
-        .get(function (req, res, next) {
-            console.log('---|verify token|---');
-            let token = req.headers['x-access-token'];
-
-            if (!token) {
-
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
-
-            return Users.verifyToken(token)
-                .then((decoded) => {
-
-                    res.status(202).send({ auth: true, decoded });
-                })
-
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    next();
-                });
-        });
-
-
-
     //auth/login
     router.route('/user/login')
         //POST - validar se o user existe na BD
@@ -350,6 +217,7 @@ function AuthRouter() {
                     next();
                 });
         });
+
 
     router.route('/forgot_password')
         .post(function (req, res, next) {
@@ -412,6 +280,136 @@ function AuthRouter() {
 
 
         })
+
+
+
+
+    router.use(function (req, res, next) {
+
+        let token = req.headers['x-access-token'];
+
+
+        if (!token) {
+            return res.status(401).send({ auth: false, message: 'no token provided.' })
+        }
+
+
+        Users.verifyToken(token)
+            .then((decoded) => {
+
+                req.roleUser = decoded.role;
+                next();
+            })
+
+            .catch(() => {
+                res.status(401).send({ auth: false, message: 'not authorized' })
+            })
+    });
+
+
+    router.route('/admin/users')
+        //GET - verify token
+        .get(Users.autorize([scopes['read-users']]), function (req, res, next) {
+
+            Users.findAll(req.pagination)
+                .then((responseServer) => {
+                    console.log('---|ADMIN all users|---'); //retorna todos os rooms
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('"---|ADMIN error|---"');
+                    console.log(err);
+                    next();
+                });
+        });
+
+
+    //auth/me
+    router.route('/me')
+        //GET - verify token
+        .get(function (req, res, next) {
+            console.log('---|verify token|---');
+            let token = req.headers['x-access-token'];
+
+            if (!token) {
+
+                return res.status(401).send({ auth: false, message: 'No token provided.' })
+            }
+
+            return Users.verifyToken(token)
+                .then((decoded) => {
+
+                    res.status(202).send({ auth: true, decoded });
+                })
+
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    res.send(err);
+                    next();
+                });
+        });
+
+
+    //auth/me
+    router.route('/me')
+        //GET - verify token
+        .get(function (req, res, next) {
+            console.log('---|verify token|---');
+            let token = req.headers['x-access-token'];
+            let role = user.role;
+
+            if (!token) {
+
+                return res.status(401).send({ auth: false, message: 'No token provided.' })
+            }
+
+            return Users.verifyToken(token)
+                .then((decoded) => {
+
+                    res.status(202).send({ role, auth: true, decoded });
+                })
+
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    res.send(err);
+                    next();
+                });
+        });
+
+
+    //auth/me
+    router.route('/me')
+        //GET - verify token
+        .get(function (req, res, next) {
+            console.log('---|verify token|---');
+            let token = req.headers['x-access-token'];
+
+            if (!token) {
+
+                return res.status(401).send({ auth: false, message: 'No token provided.' })
+            }
+
+            return Users.verifyToken(token)
+                .then((decoded) => {
+
+                    res.status(202).send({ auth: true, decoded });
+                })
+
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    res.send(err);
+                    next();
+                });
+        });
+
 
     return router;
 }
