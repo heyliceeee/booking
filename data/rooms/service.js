@@ -9,7 +9,12 @@ function RoomService(RoomModel) {
         findById,
         update,
         removeById,
-        findByDescription
+        findByDescription,
+        findAllHighPrice,
+        findAllLowPrice,
+        findAllMoreStars,
+        findAllLessStars,
+        findAllMostRecent
     };
 
 
@@ -46,6 +51,171 @@ function RoomService(RoomModel) {
                 //objecto de todos os users
                 resolve(users);
             });
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await RoomModel.count();
+
+                return Promise.resolve({
+                    rooms: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
+    }
+
+    //procurar room
+    function findAllHighPrice(pagination) {
+
+        const { limit, skip } = pagination;
+
+        return new Promise(function (resolve, reject) {
+
+            RoomModel.find({}, {}, { skip, limit }, function (err, users) {
+
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
+            })
+                .sort({ 'price': -1 }); //ordenação crescente por price
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await RoomModel.count();
+
+                return Promise.resolve({
+                    rooms: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
+    }
+
+    //procurar room
+    function findAllLowPrice(pagination) {
+
+        const { limit, skip } = pagination;
+
+        return new Promise(function (resolve, reject) {
+
+            RoomModel.find({}, {}, { skip, limit }, function (err, users) {
+
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
+            })
+                .sort('price'); //ordenação crescente por price
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await RoomModel.count();
+
+                return Promise.resolve({
+                    rooms: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
+    }
+
+    //procurar room
+    function findAllMoreStars(pagination) {
+
+        const { limit, skip } = pagination;
+
+        return new Promise(function (resolve, reject) {
+
+            RoomModel.find({}, {}, { skip, limit }, function (err, users) {
+
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
+            })
+                .sort({ 'tags.nStars': -1 }); //ordenação crescente por price
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await RoomModel.count();
+
+                return Promise.resolve({
+                    rooms: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
+    }
+
+    //procurar room
+    function findAllLessStars(pagination) {
+
+        const { limit, skip } = pagination;
+
+        return new Promise(function (resolve, reject) {
+
+            RoomModel.find({}, {}, { skip, limit }, function (err, users) {
+
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
+            })
+                .sort({ 'tags.nStars': 1 }); //ordenação crescente por price
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await RoomModel.count();
+
+                return Promise.resolve({
+                    rooms: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
+    }
+
+    //procurar room
+    function findAllMostRecent(pagination) {
+
+        const { limit, skip } = pagination;
+
+        return new Promise(function (resolve, reject) {
+
+            RoomModel.find({}, {}, { skip, limit }, function (err, users) {
+
+                if (err) reject(err);
+
+                //objecto de todos os users
+                resolve(users);
+            })
+                .sort({ '_id': -1 }); //ordenação crescente por price
         })
 
             .then(async (users) => {

@@ -165,7 +165,112 @@ function RoomRouter() {
                     console.log('---|error|---');
                     next();
                 });
-        });
+        })
+
+
+    router.route('/rooms/mostrecent')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+
+            Rooms.findAllMostRecent(req.pagination)
+                .then((responseServer) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/lowprice')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+
+            Rooms.findAllLowPrice(req.pagination)
+                .then((responseServer) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/highprice')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+
+            Rooms.findAllHighPrice(req.pagination)
+                .then((responseServer) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/morestars')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+
+            Rooms.findAllMoreStars(req.pagination)
+                .then((responseServer) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/lessstars')
+        //GET - findAll rooms
+        .get(function (req, res, next) {
+
+            Rooms.findAllLessStars(req.pagination)
+                .then((responseServer) => {
+                    console.log('---|all rooms|---'); //retorna todos os rooms
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    next();
+                });
+        })
 
 
     router.route('/rooms/:roomId')
