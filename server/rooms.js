@@ -323,15 +323,15 @@ function RoomRouter() {
         .get(function (req, res, next) {
 
             let description = req.params['description'];
-            let pageNumber = req.headers['page'];
-            let nPerPage = req.headers['limit'];
 
 
-            Rooms.findByDescription(description, pageNumber, nPerPage)
-                .then((room) => {
+            Rooms.findByDescription(description, req.pagination)
+                .then((responseServer) => {
                     console.log('---|find room by description|---'); //retorna o room pelo Id
-                    res.status(200);
-                    res.send(room);
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
                     next();
                 })
 
@@ -343,6 +343,143 @@ function RoomRouter() {
                     next();
                 });
         })
+
+
+    router.route('/rooms/:description/mostrecent')
+        //GET - findByDescription room
+        .get(function (req, res, next) {
+
+            let description = req.params['description'];
+
+
+            Rooms.findByDescriptionMostRecent(description, req.pagination)
+                .then((responseServer) => {
+                    console.log('---|find room by description|---'); //retorna o room pelo Id
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    console.log(err);
+                    res.status(404);
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/:description/lessstars')
+        //GET - findByDescription room
+        .get(function (req, res, next) {
+
+            let description = req.params['description'];
+
+
+            Rooms.findByDescriptionLessStars(description, req.pagination)
+                .then((responseServer) => {
+                    console.log('---|find room by description|---'); //retorna o room pelo Id
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    console.log(err);
+                    res.status(404);
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/:description/morestars')
+        //GET - findByDescription room
+        .get(function (req, res, next) {
+
+            let description = req.params['description'];
+
+
+            Rooms.findByDescriptionMoreStars(description, req.pagination)
+                .then((responseServer) => {
+                    console.log('---|find room by description|---'); //retorna o room pelo Id
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    console.log(err);
+                    res.status(404);
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/:description/lowprice')
+        //GET - findByDescription room
+        .get(function (req, res, next) {
+
+            let description = req.params['description'];
+
+
+            Rooms.findByDescriptionLowPrice(description, req.pagination)
+                .then((responseServer) => {
+                    console.log('---|find room by description|---'); //retorna o room pelo Id
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    console.log(err);
+                    res.status(404);
+                    next();
+                });
+        })
+
+
+    router.route('/rooms/:description/highprice')
+        //GET - findByDescription room
+        .get(function (req, res, next) {
+
+            let description = req.params['description'];
+
+
+            Rooms.findByDescriptionHighPrice(description, req.pagination)
+                .then((responseServer) => {
+                    console.log('---|find room by description|---'); //retorna o room pelo Id
+
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
+                    next();
+                })
+
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    console.log(err);
+                    res.status(404);
+                    next();
+                });
+        })
+
+
 
     return router;
 }
