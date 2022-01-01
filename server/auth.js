@@ -95,32 +95,6 @@ function AuthRouter() {
                     next();
                 });
         });
-    /* router.route('/admin/login')
-        //POST - validar se o user existe na BD
-        .post(function (req, res, next) {
-            console.log('---|verifiy user if exists|---');
-    
-            let name = req.body.name;
-            let password = req.body.password;
-            let role = req.body.role;
-    
-    
-            Users.findUser({ name, password, role })
-                .then((user) => Users.createToken(user))
-    
-                .then((response) => {
-                    console.log('save');
-                    res.status(200);
-                    res.send(response);
-                })
-    
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    console.log(err);
-                    next();
-                });
-        }); */
 
 
     //-------------------------------------------------------------------------------------//
@@ -333,11 +307,11 @@ function AuthRouter() {
         .get(function (req, res, next) {
 
             res.cookie('token', req.cookies.token, { httpOnly: true, maxAge: 0 })
-
             res.status(200);
             res.send({ logout: true })
             next();
-        });
+        })
+
 
     router.route('/admin/users')
         //GET - verify token
@@ -366,76 +340,17 @@ function AuthRouter() {
         //GET - verify token
         .get(function (req, res, next) {
             console.log('---|verify token|---');
-            let token = req.headers['x-access-token'];
 
-            if (!token) {
 
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
+            return new Promise(() => {
 
-            return Users.verifyToken(token)
-                .then((decoded) => {
+                console.log("entrou na promise");
 
-                    res.status(202).send({ auth: true, decoded });
-                })
+                res.status(202).send({ auth: true, decoded: req.roleUser });
+            })
+
 
                 .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    next();
-                });
-        });
-
-
-    //auth/me
-    router.route('/me')
-        //GET - verify token
-        .get(function (req, res, next) {
-            console.log('---|verify token|---');
-            let token = req.headers['x-access-token'];
-            let role = user.role;
-
-            if (!token) {
-
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
-
-            return Users.verifyToken(token)
-                .then((decoded) => {
-
-                    res.status(202).send({ role, auth: true, decoded });
-                })
-
-                .catch((err) => {
-                    console.log("error");
-                    res.status(500);
-                    res.send(err);
-                    next();
-                });
-        });
-
-
-    //auth/me
-    router.route('/me')
-        //GET - verify token
-        .get(function (req, res, next) {
-            console.log('---|verify token|---');
-            let token = req.headers['x-access-token'];
-
-            if (!token) {
-
-                return res.status(401).send({ auth: false, message: 'No token provided.' })
-            }
-
-            return Users.verifyToken(token)
-                .then((decoded) => {
-
-                    res.status(202).send({ auth: true, decoded });
-                })
-
-                .catch((err) => {
-                    console.log("error");
                     res.status(500);
                     res.send(err);
                     next();

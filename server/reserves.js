@@ -4,6 +4,9 @@ const Rooms = require('../data/rooms');
 const Users = require('../data/users');
 const scopes = require('../data/users/scopes');
 const pagination = require('../middleware/pagination');
+const VerifyToken = require('../middleware/Token');
+const cookieParser = require('cookie-parser');
+
 
 function ReserveRouter() {
 
@@ -28,29 +31,10 @@ function ReserveRouter() {
         next();
     });
 
-    router.use(function (req, res, next) {
-
-        let token = req.headers['x-access-token'];
-
-
-        if (!token) {
-            return res.status(401).send({ auth: false, message: 'no token provided.' })
-        }
-
-
-        Users.verifyToken(token)
-            .then((decoded) => {
-
-                req.roleUser = decoded.role;
-                next();
-            })
-
-            .catch(() => {
-                res.status(401).send({ auth: false, message: 'not authorized' })
-            })
-    });
-
     router.use(pagination);
+
+    router.use(cookieParser());
+    router.use(VerifyToken);
     //fim camadas
 
 

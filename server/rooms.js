@@ -5,6 +5,9 @@ const scopes = require('../data/users/scopes');
 const User = require('../data/users/user');
 const pagination = require('../middleware/pagination');
 const fileUpload = require('express-fileupload');
+const VerifyToken = require('../middleware/Token');
+const cookieParser = require('cookie-parser');
+
 
 function RoomRouter() {
 
@@ -406,6 +409,9 @@ function RoomRouter() {
                 res.status(401).send({ auth: false, message: 'not authorized' })
             })
     }); */
+
+    router.use(cookieParser());
+    router.use(VerifyToken);
 
 
     //-------------------------------------------------------------------------------------------//
