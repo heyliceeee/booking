@@ -3,6 +3,8 @@ const Users = require('../data/users');
 const crypto = require('crypto');
 const scopes = require('../data/users/scopes');
 const pagination = require('../middleware/pagination');
+const VerifyToken = require('../middleware/Token');
+const cookieParser = require('cookie-parser');
 
 
 function AuthRouter() {
@@ -74,13 +76,16 @@ function AuthRouter() {
             let role = req.body.role;
 
 
-            Users.findUser({ name, password, role })
-                .then((user) => Users.createToken(user))
+            return Users.findUser({ name, password, role })
+                .then((user) => {
+                    return Users.createToken(user);
+                })
 
-                .then((response) => {
+                .then((login) => {
                     console.log('save');
+                    res.cookie('token', login.token, { httpOnly: true });
                     res.status(200);
-                    res.send(response);
+                    res.send(login);
                 })
 
                 .catch((err) => {
@@ -90,6 +95,32 @@ function AuthRouter() {
                     next();
                 });
         });
+    /* router.route('/admin/login')
+        //POST - validar se o user existe na BD
+        .post(function (req, res, next) {
+            console.log('---|verifiy user if exists|---');
+    
+            let name = req.body.name;
+            let password = req.body.password;
+            let role = req.body.role;
+    
+    
+            Users.findUser({ name, password, role })
+                .then((user) => Users.createToken(user))
+    
+                .then((response) => {
+                    console.log('save');
+                    res.status(200);
+                    res.send(response);
+                })
+    
+                .catch((err) => {
+                    console.log("error");
+                    res.status(500);
+                    console.log(err);
+                    next();
+                });
+        }); */
 
 
     //-------------------------------------------------------------------------------------//
@@ -131,24 +162,28 @@ function AuthRouter() {
         //POST - validar se o user existe na BD
         .post(function (req, res, next) {
             console.log('---|verifiy user if exists|---');
+
             let name = req.body.name;
             let password = req.body.password;
             let role = req.body.role;
 
 
-            Users.findUser({ name, password, role })
-                .then((user) => Users.createToken(user))
+            return Users.findUser({ name, password, role })
+                .then((user) => {
+                    return Users.createToken(user);
+                })
 
-                .then((response) => {
+                .then((login) => {
                     console.log('save');
+                    res.cookie('token', login.token, { httpOnly: true });
                     res.status(200);
-                    res.send(response);
+                    res.send(login);
                 })
 
                 .catch((err) => {
                     console.log("error");
                     res.status(500);
-                    res.send(err);
+                    console.log(err);
                     next();
                 });
         });
@@ -201,19 +236,22 @@ function AuthRouter() {
             let role = req.body.role;
 
 
-            Users.findUser({ name, password, role })
-                .then((user) => Users.createToken(user))
+            return Users.findUser({ name, password, role })
+                .then((user) => {
+                    return Users.createToken(user);
+                })
 
-                .then((response) => {
+                .then((login) => {
                     console.log('save');
+                    res.cookie('token', login.token, { httpOnly: true });
                     res.status(200);
-                    res.send(response);
+                    res.send(login);
                 })
 
                 .catch((err) => {
                     console.log("error");
                     res.status(500);
-                    res.send(err);
+                    console.log(err);
                     next();
                 });
         });
@@ -254,25 +292,25 @@ function AuthRouter() {
                 const user = Users.findEmail ({email}); // <-- Problema
                  console.log("passou aqui!"); //<-- Não Leu
                  console.log(user);
-    
+     
                 if(!user) {
                     return res.status(400).send({ error: 'User not found'})
                 }
                 const token = crypto.randomBytes(20).toString('hex');
-    
+     
                 const now = new Date();
                 now.setHours(now.getHours() + 1);
-    
+     
                  User.findByIdAndUpdate(user.id, {
                     '$set': {
                         passwordResetToken: token,
                         passwordResetExpires: now
                     }
                 })
-    
+     
                 console.log(token, now);
-    
-    
+     
+     
             } catch (err) {
                 res.status(400).send({ error: 'Error on Forgot Password, please try again'})
             }
@@ -283,29 +321,23 @@ function AuthRouter() {
 
 
 
+    //-------------------------------------------------------------------------------------------//
+    //------------------------------------ROUTES COM TOKEN--------------------------------------//
+    //------------------------------------------------------------------------------------------//
 
-    router.use(function (req, res, next) {
+    router.use(cookieParser());
+    router.use(VerifyToken);
 
-        let token = req.headers['x-access-token'];
+    router.route('/logout')
+        //GET - logout
+        .get(function (req, res, next) {
 
+            res.cookie('token', req.cookies.token, { httpOnly: true, maxAge: 0 })
 
-        if (!token) {
-            return res.status(401).send({ auth: false, message: 'no token provided.' })
-        }
-
-
-        Users.verifyToken(token)
-            .then((decoded) => {
-
-                req.roleUser = decoded.role;
-                next();
-            })
-
-            .catch(() => {
-                res.status(401).send({ auth: false, message: 'not authorized' })
-            })
-    });
-
+            res.status(200);
+            res.send({ logout: true })
+            next();
+        });
 
     router.route('/admin/users')
         //GET - verify token

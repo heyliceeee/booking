@@ -29,108 +29,8 @@ function RoomRouter() {
         next();
     });
 
-    router.use(function (req, res, next) {
-
-        let token = req.headers['x-access-token'];
-
-
-        if (!token) {
-            return res.status(401).send({ auth: false, message: 'no token provided.' })
-        }
-
-
-        Users.verifyToken(token)
-            .then((decoded) => {
-
-                req.roleUser = decoded.role;
-                next();
-            })
-
-            .catch(() => {
-                res.status(401).send({ auth: false, message: 'not authorized' })
-            })
-    });
-
     router.use(pagination);
     //fim camadas    
-
-
-
-
-    //-------------------------------------------------------------------------------------------//
-    //------------------------------------ADMIN EDITOR ROUTES------------------------------------//
-    //------------------------------------------------------------------------------------------//
-
-    router.route('/rooms')
-        //POST - create rooms
-        .post(Users.autorize([scopes['create-room']]), function (req, res, next) {
-
-            console.log('---|create room|---');
-
-            let body = req.body;
-
-            Rooms.create(body)
-                .then(() => {
-                    console.log('save');
-                    res.status(200);
-                    res.send(body);
-                    next();
-                })
-
-                .catch((err) => {
-                    console.log('---|error|---');
-                    console.log(err);
-                    err.status = err.status || 500;
-                    res.status(401);
-                    next();
-                });
-        });
-
-
-    router.route('/rooms/:roomId')
-        //PUT - update room by ID
-        .put(Users.autorize([scopes['update-room']]), function (req, res, next) {
-
-            let roomId = req.params['roomId'];
-            let body = req.body;
-
-
-            Rooms.update(roomId, body)
-                .then((room) => {
-                    console.log('---|update one room by ID|---'); //altera dados do room
-                    res.status(200);
-                    res.send(room);
-                    next();
-                })
-
-                .catch((err) => {
-                    console.log('---|error|---');
-                    res.status(404);
-                    next();
-                });
-        })
-
-        //DELETE - delete room by ID
-        .delete(Users.autorize([scopes['delete-room']]), function (req, res, next) {
-
-            let roomId = req.params['roomId'];
-
-
-            Rooms.removeById(roomId)
-                .then(() => {
-                    console.log("---|delete one room by ID|---")
-                    res.status(200);
-                    next();
-                })
-
-                .catch((err) => {
-                    console.log('---|error|---');
-                    res.status(404);
-                    next();
-                });
-        });
-
-
 
 
     //-------------------------------------------------------------------------------------//
@@ -479,6 +379,107 @@ function RoomRouter() {
                 });
         })
 
+
+
+    //-------------------------------------------------------------------------------------------//
+    //------------------------------------ROUTES COM TOKEN--------------------------------------//
+    //------------------------------------------------------------------------------------------//
+
+    /* router.use(function (req, res, next) {
+
+        let token = req.headers['x-access-token'];
+
+
+        if (!token) {
+            return res.status(401).send({ auth: false, message: 'no token provided.' })
+        }
+
+
+        Users.verifyToken(token)
+            .then((decoded) => {
+
+                req.roleUser = decoded.role;
+                next();
+            })
+
+            .catch(() => {
+                res.status(401).send({ auth: false, message: 'not authorized' })
+            })
+    }); */
+
+
+    //-------------------------------------------------------------------------------------------//
+    //------------------------------------ADMIN EDITOR ROUTES------------------------------------//
+    //------------------------------------------------------------------------------------------//
+
+    router.route('/rooms')
+        //POST - create rooms
+        .post(Users.autorize([scopes['create-room']]), function (req, res, next) {
+
+            console.log('---|create room|---');
+
+            let body = req.body;
+
+            Rooms.create(body)
+                .then(() => {
+                    console.log('save');
+                    res.status(200);
+                    res.send(body);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    console.log(err);
+                    err.status = err.status || 500;
+                    res.status(401);
+                    next();
+                });
+        });
+
+
+    router.route('/rooms/:roomId')
+        //PUT - update room by ID
+        .put(Users.autorize([scopes['update-room']]), function (req, res, next) {
+
+            let roomId = req.params['roomId'];
+            let body = req.body;
+
+
+            Rooms.update(roomId, body)
+                .then((room) => {
+                    console.log('---|update one room by ID|---'); //altera dados do room
+                    res.status(200);
+                    res.send(room);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    res.status(404);
+                    next();
+                });
+        })
+
+        //DELETE - delete room by ID
+        .delete(Users.autorize([scopes['delete-room']]), function (req, res, next) {
+
+            let roomId = req.params['roomId'];
+
+
+            Rooms.removeById(roomId)
+                .then(() => {
+                    console.log("---|delete one room by ID|---")
+                    res.status(200);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    res.status(404);
+                    next();
+                });
+        });
 
 
     return router;
