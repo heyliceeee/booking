@@ -43,6 +43,7 @@ function UserService(UserModel) {
             newUser.save(function (err) {
 
                 if (err) reject("There is a problem with register");
+                console.log(err);
                 resolve(newUser);
             });
         });
@@ -53,6 +54,7 @@ function UserService(UserModel) {
     function createToken(user) {
 
         console.log(user);
+        console.log("entrou no createtoken");
 
         let token = jwt.sign({ id: user._id, role: user.role.scopes, name: user.name }, config.secret, {
             expiresIn: config.expiresPassword

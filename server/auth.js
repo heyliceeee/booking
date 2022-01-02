@@ -299,8 +299,8 @@ function AuthRouter() {
     //------------------------------------ROUTES COM TOKEN--------------------------------------//
     //------------------------------------------------------------------------------------------//
 
-    router.use(cookieParser());
-    router.use(VerifyToken);
+    //router.use(cookieParser());
+    //router.use(VerifyToken);
 
     router.route('/logout')
         //GET - logout
