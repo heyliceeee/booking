@@ -3,21 +3,21 @@ let Schema = mongoose.Schema;
 const scopes = require('./scopes');
 
 let RoleSchema = new Schema({
-    nameRole: { type: String, required: true, unique: true, default: "user" },
+    nameRole: { type: String },
     scopes: [{
         type: String, enum:
             [
                 scopes["read-own-reserves"], scopes["update-own-reserve"],
                 scopes["read-users"],
-                scopes["update-reserve"], scopes["read-reserves"], scopes["delete-reserve"], scopes["create-room"], scopes["update-room"], scopes["read-reserve-client"],
+                scopes["update-reserve"], scopes["read-reserves"], scopes["delete-reserve"], scopes["create-room"], scopes["update-room"], scopes["read-reserve-client"], scopes["delete-room"],
                 scopes["create-reserve"], scopes["detail-reserve"], scopes["verify-logged-in"]
-            ], default: scopes["read-own-reserves"]
+            ],
     }]
 });
 
 //create a schema
 let UserSchema = new Schema({
-    name: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
     role: { type: RoleSchema }
