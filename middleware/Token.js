@@ -5,11 +5,7 @@ module.exports = (req, res, next) => {
     console.log(req.cookies);
     let token = req.cookies.token;
 
-    console.log("token: " + token);
-
-
     if (!token) {
-        console.log("!token");
         return res.status(401).send({ auth: false, message: 'no token provided.' })
     }
 
