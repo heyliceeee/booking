@@ -323,6 +323,7 @@ function AuthRouter() {
 
                     const response = { auth: true, ...responseServer };
 
+                    console.log(response);
                     res.send(response);
                     next();
                 })
@@ -344,9 +345,7 @@ function AuthRouter() {
 
             return new Promise(() => {
 
-                console.log("entrou na promise");
-
-                res.status(202).send({ auth: true, decoded: req.roleUser });
+                res.status(202).send({ auth: true, decoded: [req.roleUser, req.id, req.nameRole] });
             })
 
 

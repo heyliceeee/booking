@@ -470,12 +470,14 @@ function RoomRouter() {
         //DELETE - delete room by ID
         .delete(Users.autorize([scopes['delete-room']]), function (req, res, next) {
 
+            console.log("---|delete one room by ID|---")
+
             let roomId = req.params['roomId'];
 
 
             Rooms.removeById(roomId)
                 .then(() => {
-                    console.log("---|delete one room by ID|---")
+                    console.log('delete');
                     res.status(200);
                     next();
                 })

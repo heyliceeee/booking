@@ -54,9 +54,8 @@ function UserService(UserModel) {
     function createToken(user) {
 
         console.log(user);
-        console.log("entrou no createtoken");
 
-        let token = jwt.sign({ id: user._id, role: user.role.scopes, name: user.name }, config.secret, {
+        let token = jwt.sign({ id: user._id, role: user.role.scopes, name: user.name, nameRole: user.role.nameRole }, config.secret, {
             expiresIn: config.expiresPassword
         });
 
