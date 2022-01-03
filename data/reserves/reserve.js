@@ -4,11 +4,11 @@ let Schema = mongoose.Schema;
 
 //criar um schema
 let ReserveSchema = new Schema({
-    dateCheckIn: { type: Date, default: Date.now },
-    dateCheckOut: { type: Date },
-    idUser: { type: String, default: "" },
-    nameUser: { type: String, default: "" },
-    idRoom: { type: String, default: "" }
+    dateCheckIn: { type: String },
+    dateCheckOut: { type: String },
+    idUser: { type: String },
+    nameUser: { type: String },
+    idRoom: { type: String }
 });
 
 //criar um modelo para usar o schema
