@@ -158,20 +158,19 @@ function ReserveRouter() {
             let roomId = req.params['roomId'];
             let body = req.body;
 
-            Rooms.findById(roomId, req.pagination)
-                .then(() => Reserves.create(body))
-
-                .then((responseServer) => {
+            Reserves.create(body, roomId)
+                .then((body) => {
                     console.log('---|funciona|---');
 
-                    const response = { auth: true, ...responseServer };
+                    /* const response = { auth: true, ...responseServer };
 
                     res.send(response);
-                    next();
-                    /* console.log('save');
+                    console.log("response create reserves: " + { ...responseServer });
+                    next(); */
+                    console.log('save');
                     res.status(200);
                     res.send(body);
-                    next(); */
+                    next();
                 })
 
                 .catch((err) => {

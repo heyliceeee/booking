@@ -12,9 +12,9 @@ function ReserveService(ReserveModel) {
     };
 
     //criar reserve
-    function create(values) {
+    function create(values, id) {
 
-        let newReserve = ReserveModel(values);
+        let newReserve = ReserveModel(values, id);
 
         return save(newReserve);
     }
