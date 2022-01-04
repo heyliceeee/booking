@@ -81,25 +81,37 @@ function ReserveService(ReserveModel) {
 
 
     //procurar reserve por user id
-    function findByUserId(idUser, pageNumber, nPerPage) {
+    function findByUserId(idUser, pagination) {
+
+        const { limit, skip } = pagination;
+
         return new Promise(function (resolve, reject) {
 
-            let intPageNumber = parseInt(pageNumber);
-            let intNPerPage = parseInt(nPerPage);
-
-            console.log("page: " + intPageNumber);
-            console.log("nPerPage: " + intNPerPage);
-
-            ReserveModel.find({ idUser: idUser }, function (err, user) {
+            ReserveModel.find({ idUser: idUser }, {}, { skip, limit }, function (err, user) {
 
                 if (err) reject(err);
 
                 resolve(user);
             })
                 .sort('dateCheckIn') //ordenação crescente por date Check In
-                .skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
-                .limit(intNPerPage);
-        });
+            //.skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
+            //.limit(intNPerPage);
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await ReserveModel.count();
+
+                return Promise.resolve({
+                    reserves: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
     }
 
 

@@ -48,9 +48,6 @@ function ReserveRouter() {
         .get(Users.autorize([scopes['read-reserves']]), function (req, res, next) {
 
             console.log('---|verify token|---');
-            //let pageNumber = req.headers['page'];
-            //let nPerPage = req.headers['limit'];
-
 
             Reserves.findAll(req.pagination)
                 .then((responseServer) => {
@@ -212,21 +209,20 @@ function ReserveRouter() {
     //----------------------------------------------------------------------------------//
 
 
-    router.route('/user/reserves/:userId')
+    router.route('/user/reserves/:idUser')
         //GET - findAll reserves
         .get(Users.autorize([scopes['read-own-reserves']]), function (req, res, next) {
 
-            console.log('---|verify token|---');
-            let idUser = req.params['userId'];
-            let pageNumber = req.headers['page'];
-            let nPerPage = req.headers['limit'];
+            let idUser = req.params['idUser'];
 
 
-            Reserves.findByUserId(idUser, pageNumber, nPerPage)
-                .then((reserves) => {
+            Reserves.findByUserId(idUser, req.pagination)
+                .then((responseServer) => {
+                    console.log('---|MY RESERVES|---'); //retorna o room pelo Id
 
-                    console.log('---|USER all reserves|---'); //retorna todos os reserves
-                    res.send(reserves);
+                    const response = { auth: true, ...responseServer };
+
+                    res.send(response);
                     next();
                 })
 
