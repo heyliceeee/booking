@@ -335,6 +335,29 @@ function AuthRouter() {
                 });
         });
 
+    router.route('/admin/users/:id')
+        //DELETE - delete room by ID
+        .delete(Users.autorize([scopes['delete-user']]), function (req, res, next) {
+
+            console.log("---|delete one user by ID|---")
+
+            let id = req.params['id'];
+
+            Users.removeById(id)
+                .then(() => {
+                    console.log('delete');
+                    res.status(200);
+                    next();
+                })
+
+                .catch((err) => {
+                    console.log('---|error|---');
+                    res.status(404);
+                    next();
+                });
+        });
+
+
 
     //auth/me
     router.route('/me')

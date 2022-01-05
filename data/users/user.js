@@ -11,7 +11,8 @@ let RoleSchema = new Schema({
                 scopes["read-own-reserves"], scopes["update-own-reserve"], scopes["read-users"],
                 scopes["update-reserve"], scopes["read-reserves"], scopes["delete-reserve"],
                 scopes["create-room"], scopes["update-room"], scopes["read-reserve-client"],
-                scopes["delete-room"], scopes["create-reserve"], scopes["detail-reserve"], scopes["verify-logged-in"]
+                scopes["delete-room"], scopes["create-reserve"], scopes["detail-reserve"], scopes["verify-logged-in"],
+                scopes["delete-user"]
             ],
     }]
 });

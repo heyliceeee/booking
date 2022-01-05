@@ -7,6 +7,7 @@ module.exports = {
 
     //ADMIN
     'read-users': 'read-users',
+    'delete-user': 'delete-user',
 
     //ADMIN EDITOR
     'update-reserve': 'update-reserve',

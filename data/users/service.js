@@ -10,6 +10,7 @@ function UserService(UserModel) {
         verifyToken,
         findUser,
         findAll,
+        removeById,
         createPassword,
         comparePassword,
         autorize
@@ -138,6 +139,21 @@ function UserService(UserModel) {
                     }
                 });
             });
+    }
+
+    //remover room pelo id
+    function removeById(id) {
+        return new Promise(function (resolve, reject) {
+
+            console.log(id);
+
+            UserModel.findByIdAndRemove(id, function (err) {
+
+                if (err) reject(err);
+                console.log(err);
+                resolve();
+            });
+        });
     }
 
 
