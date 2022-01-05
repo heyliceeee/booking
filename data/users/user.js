@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
+
 const scopes = require('./scopes');
 
 let RoleSchema = new Schema({
@@ -7,10 +8,10 @@ let RoleSchema = new Schema({
     scopes: [{
         type: String, enum:
             [
-                scopes["read-own-reserves"], scopes["update-own-reserve"],
-                scopes["read-users"],
-                scopes["update-reserve"], scopes["read-reserves"], scopes["delete-reserve"], scopes["create-room"], scopes["update-room"], scopes["read-reserve-client"], scopes["delete-room"],
-                scopes["create-reserve"], scopes["detail-reserve"], scopes["verify-logged-in"]
+                scopes["read-own-reserves"], scopes["update-own-reserve"], scopes["read-users"],
+                scopes["update-reserve"], scopes["read-reserves"], scopes["delete-reserve"],
+                scopes["create-room"], scopes["update-room"], scopes["read-reserve-client"],
+                scopes["delete-room"], scopes["create-reserve"], scopes["detail-reserve"], scopes["verify-logged-in"]
             ],
     }]
 });
@@ -23,9 +24,6 @@ let UserSchema = new Schema({
     role: { type: RoleSchema }
 });
 
-//the schema is useless so far
-//we need to create a model using it
-let User = mongoose.model('User', UserSchema);
 
-//make this available to our users in our Node applications
+let User = mongoose.model('User', UserSchema);
 module.exports = User;
