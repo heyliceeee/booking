@@ -278,7 +278,7 @@ function RoomService(RoomModel) {
 
         return new Promise(function (resolve, reject) {
 
-            RoomModel.find({ description: new RegExp(description) }, {}, { skip, limit }, function (err, users) {
+            RoomModel.find({ description: new RegExp(description, i) }, {}, { skip, limit }, function (err, users) {
 
                 if (err) reject(err);
 
