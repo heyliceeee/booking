@@ -141,7 +141,7 @@ function UserService(UserModel) {
             });
     }
 
-    //remover room pelo id
+    //remover user pelo id
     function removeById(id) {
         return new Promise(function (resolve, reject) {
 

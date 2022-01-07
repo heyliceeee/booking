@@ -6,6 +6,13 @@ let Tags = new Schema({
     extras: [{ type: String, required: false}]
 });
 
+let CommentsSchema = new Schema ({
+    userId: {type: Number, required: true},
+    username: {type: String, required: true},
+    date:{type: Date, requiered: true},
+    text: {type: String},
+    rating: {type: Number}
+})
 
 
 /*
@@ -30,7 +37,8 @@ let RoomSchema = new Schema({
     nStars: { type: String, required: false, default: 0 },
     nSingleBed: { type: Number, required: false, default: 0 },
     nDoubleBed: { type: Number, required: false, default: 0 },
-    extras: [{ type: String, required: false}]
+    extras: [{ type: String, required: false}],
+    comments: [{type: CommentsSchema}]
 });
 
 //criar um modelo para usar o schema
