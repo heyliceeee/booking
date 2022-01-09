@@ -1,6 +1,11 @@
 module.exports = {
     //USER
     'read-own-reserves': 'read-own-reserves',
+    'create-favorite': 'create-favorite',
+    'read-own-favorites': 'read-own-favorites',
+    'delete-favorite': 'delete-favorite',
+    'create-comment': 'create-comment',
+    'read-comments': 'read-comments',
 
     //EDITOR
 
