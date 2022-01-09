@@ -17,18 +17,18 @@ let RoleSchema = new Schema({
     }]
 });
 
-let FaviritoSchema = new Schema({
-    idRoom: {type: Number, required: true}
+let FavoriteSchema = new Schema({
+    idRoom: { type: Number, required: true }
 })
 
 
 //create a schema
 let UserSchema = new Schema({
-    avatar: {type: String},
+    avatar: { type: String },
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    favorito: [{type: FaviritoSchema}],
+    favorite: { type: FavoriteSchema },
     role: { type: RoleSchema }
 });
 
