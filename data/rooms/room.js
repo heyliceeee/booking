@@ -3,27 +3,17 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let Tags = new Schema({
-    extras: [{ type: String, required: false}]
+    extras: [{ type: String, required: false }]
 });
 
-let CommentsSchema = new Schema ({
-    userId: {type: Number, required: true},
-    username: {type: String, required: true},
-    date:{type: Date, requiered: true},
-    text: {type: String},
-    rating: {type: Number}
-})
+/* let CommentsSchema = new Schema({
+    userId: { type: Number, required: true },
+    username: { type: String, required: true },
+    date: { type: Date, requiered: true },
+    text: { type: String },
+    rating: { type: Number }
+}) */
 
-
-/*
-    Coisas que se poderiam adicionar:
-
-    - Número de Estrelas ---DONE---
-    - Classificiação 
-    - c/s sauna 
-    - c/s spa ---DONE---
-
-*/
 
 //criar uma schema
 let RoomSchema = new Schema({
@@ -37,8 +27,7 @@ let RoomSchema = new Schema({
     nStars: { type: String, required: false, default: 0 },
     nSingleBed: { type: Number, required: false, default: 0 },
     nDoubleBed: { type: Number, required: false, default: 0 },
-    extras: [{ type: String, required: false}],
-    comments: [{type: CommentsSchema}]
+    extras: [{ type: String, required: false }]
 });
 
 //criar um modelo para usar o schema

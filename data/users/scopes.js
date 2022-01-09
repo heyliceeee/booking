@@ -5,7 +5,6 @@ module.exports = {
     'read-own-favorites': 'read-own-favorites',
     'delete-favorite': 'delete-favorite',
     'create-comment': 'create-comment',
-    'read-comments': 'read-comments',
 
     //EDITOR
 
