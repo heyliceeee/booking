@@ -39,14 +39,14 @@ function CommentRouter() {
     //------------------------------------ALL ROUTES--------------------------------------//
     //-----------------------------------------------------------------------------------//
 
-    router.route('/comments/:roomId')
+    router.route('/comments/:idRoom')
         //GET - findAll reserves
         .get(function (req, res, next) {
 
             let idRoom = req.params['idRoom'];
 
 
-            Comments.findByUserId(idRoom, req.pagination)
+            Comments.findByRoomId(idRoom, req.pagination)
                 .then((responseServer) => {
 
                     console.log('---|all comments|---'); //retorna todos os comments pelo idroom
@@ -80,7 +80,7 @@ function CommentRouter() {
             let roomId = req.params['roomId'];
             let body = req.body;
 
-            Reserves.create(body, roomId)
+            Comments.create(body, roomId)
                 .then((body) => {
                     console.log('save');
                     res.status(200);
