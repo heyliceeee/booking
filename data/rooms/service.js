@@ -154,7 +154,7 @@ function RoomService(RoomModel) {
                 //objecto de todos os users
                 resolve(users);
             })
-                .sort({ 'tags.nStars': -1 }); //ordenação crescente por price
+                .sort({ 'nStars': -1 }); //ordenação crescente por price
         })
 
             .then(async (users) => {
@@ -187,7 +187,7 @@ function RoomService(RoomModel) {
                 //objecto de todos os users
                 resolve(users);
             })
-                .sort({ 'tags.nStars': 1 }); //ordenação crescente por price
+                .sort({ 'nStars': 1 }); //ordenação crescente por price
         })
 
             .then(async (users) => {
@@ -351,7 +351,7 @@ function RoomService(RoomModel) {
                 //objecto de todos os users
                 resolve(users);
             })
-                .sort({ 'tags.nStars': 1 }); //ordenação crescente por price
+                .sort({ 'nStars': 1 }); //ordenação crescente por price
         })
 
             .then(async (users) => {
@@ -384,9 +384,9 @@ function RoomService(RoomModel) {
                 //objecto de todos os users
                 resolve(users);
             })
-                .sort({ 'tags.nStars': -1 }); //ordenação crescente por price
+                .sort({ 'nStars': -1 }); //ordenação crescente por price
         })
-
+ 
             .then(async (users) => {
 
                 const totalUsers = await RoomModel.count();
