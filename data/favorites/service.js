@@ -80,6 +80,7 @@ function FavoriteService(FavoriteModel) {
 
     }
 
+
     return service;
 }
 

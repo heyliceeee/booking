@@ -61,6 +61,7 @@ function FavoriteRouter() {
 
                 .catch((err) => {
                     console.log('---|error|---');
+                    console.log(err);
                     err.status = err.status || 500;
                     res.status(401);
                     next();
