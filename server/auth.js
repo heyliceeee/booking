@@ -367,7 +367,7 @@ function AuthRouter() {
 
             return new Promise(() => {
 
-                res.status(202).send({ auth: true, decoded: [req.roleUser, req.id, req.nameRole] });
+                res.status(202).send({ auth: true, decoded: [req.roleUser, req.id, req.nameRole, req.name] });
             })
 
 

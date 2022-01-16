@@ -15,6 +15,7 @@ module.exports = (req, res, next) => {
             req.roleUser = decoded.role;
             req.id = decoded.id;
             req.nameRole = decoded.nameRole;
+            req.name = decoded.name;
             next();
         })
 
