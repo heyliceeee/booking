@@ -1,6 +1,6 @@
 //vai devolver sempre as ações q podemos fazer na BD
 
-function ReserveService(ReserveModel){
+function ReserveService(ReserveModel) {
     let service = {
         create,
         findAll,
@@ -12,22 +12,22 @@ function ReserveService(ReserveModel){
     };
 
     //criar reserve
-    function create(values){
+    function create(values, id) {
 
-        let newReserve = ReserveModel(values);
+        let newReserve = ReserveModel(values, id);
 
         return save(newReserve);
     }
 
 
     //guardar reserve
-    function save(newReserve){
-        return new Promise(function (resolve, reject){
+    function save(newReserve) {
+        return new Promise(function (resolve, reject) {
 
             //guardar
-            newReserve.save(function (err){
-                
-                if(err) reject(err);
+            newReserve.save(function (err) {
+
+                if (err) reject(err);
 
                 resolve('Reserve created!');
             });
@@ -36,37 +36,44 @@ function ReserveService(ReserveModel){
 
 
     //procurar reserve
-    function findAll(pageNumber, nPerPage){
-        return new Promise(function (resolve, reject){
+    function findAll(pagination) {
 
-            let intPageNumber = parseInt(pageNumber);
-            let intNPerPage = parseInt(nPerPage);
+        const { limit, skip } = pagination;
 
-            console.log("page: " + intPageNumber);
-            console.log("nPerPage: " + intNPerPage);
+        return new Promise(function (resolve, reject) {
 
-            ReserveModel.find({}, function (err, users){
+            ReserveModel.find({}, {}, { skip, limit }, function (err, users) {
 
-                if(err) reject(err);
+                if (err) reject(err);
 
                 //objecto de todos os users
                 resolve(users);
-            })
-            .sort('dateCheckIn') //ordenação crescente por date CheckIn
-            .skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
-            .limit(intNPerPage);
-        });
+            });
+        })
+
+            .then(async (users) => {
+                const totalUsers = await ReserveModel.count();
+
+                return Promise.resolve({
+                    reserves: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
     }
 
 
     //procurar reserve por id
-    function findById(id){
-        return new Promise(function (resolve, reject){
+    function findById(id) {
+        return new Promise(function (resolve, reject) {
+            ReserveModel.findById(id, function (err, user) {
+                if (err) reject(err);
 
-            ReserveModel.findById(id, function (err, user){
-
-                if(err) reject(err);
-
+                //objecto de todos os users
                 resolve(user);
             });
         });
@@ -74,35 +81,47 @@ function ReserveService(ReserveModel){
 
 
     //procurar reserve por user id
-    function findByUserId(idUser, pageNumber, nPerPage){
-        return new Promise(function (resolve, reject){
+    function findByUserId(idUser, pagination) {
 
-            let intPageNumber = parseInt(pageNumber);
-            let intNPerPage = parseInt(nPerPage);
+        const { limit, skip } = pagination;
 
-            console.log("page: " + intPageNumber);
-            console.log("nPerPage: " + intNPerPage);
+        return new Promise(function (resolve, reject) {
 
-            ReserveModel.find({ idUser: idUser}, function (err, user){
+            ReserveModel.find({ idUser: idUser }, {}, { skip, limit }, function (err, user) {
 
-                if(err) reject(err);
+                if (err) reject(err);
 
                 resolve(user);
             })
-            .sort('dateCheckIn') //ordenação crescente por date Check In
-            .skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
-            .limit(intNPerPage);
-        });
+                .sort('dateCheckIn') //ordenação crescente por date Check In
+            //.skip(intPageNumber > 0 ? ((intPageNumber - 1) * intNPerPage) : 0)
+            //.limit(intNPerPage);
+        })
+
+            .then(async (users) => {
+
+                const totalUsers = await ReserveModel.count();
+
+                return Promise.resolve({
+                    reserves: users,
+                    pagination: {
+                        pageSize: limit,
+                        page: Math.floor(skip / limit),
+                        hasMore: (skip + limit) < totalUsers,
+                        total: totalUsers
+                    }
+                });
+            });
     }
 
 
     //procurar reserve por name
-    function findByName(name){
-        return new Promise(function (resolve, reject){
+    function findByName(name) {
+        return new Promise(function (resolve, reject) {
 
-            ReserveModel.find({name: new RegExp(name)}, function (err, users){
+            ReserveModel.find({ name: new RegExp(name) }, function (err, users) {
 
-                if(err) reject(err);
+                if (err) reject(err);
 
                 resolve(users);
             });
@@ -111,12 +130,12 @@ function ReserveService(ReserveModel){
 
 
     //atualizar reserve
-    function update(roomId, values){
-        return new Promise(function (resolve, reject){
+    function update(roomId, values) {
+        return new Promise(function (resolve, reject) {
 
-            ReserveModel.findByIdAndUpdate(roomId, values, function (err, user){
+            ReserveModel.findByIdAndUpdate(roomId, values, function (err, user) {
 
-                if(err) reject(err);
+                if (err) reject(err);
 
                 resolve(user);
             });
@@ -125,14 +144,14 @@ function ReserveService(ReserveModel){
 
 
     //remover room pelo id
-    function removeById(id){
-        return new Promise(function (resolve, reject){
+    function removeById(id) {
+        return new Promise(function (resolve, reject) {
 
             console.log(id);
 
-            ReserveModel.findByIdAndRemove(id, function (err){
+            ReserveModel.findByIdAndRemove(id, function (err) {
 
-                if(err) reject(err);
+                if (err) reject(err);
 
                 console.log(err);
                 resolve();
